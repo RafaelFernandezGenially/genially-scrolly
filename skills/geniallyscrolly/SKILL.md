@@ -1,13 +1,13 @@
 ---
 name: geniallyscrolly
-description: Entry point for making a scrollytelling page with Genially Scrolly — a story, course, report, product launch or any scroll-driven web experience from a prompt, a style and the user's content. Use for "/geniallyscrolly", "make a scrollytelling", "scroll story", "página con scroll", "scrollytelling sobre…", "a course page that animates on scroll", or edits to a Genially Scrolly project.
+description: Make a scrollytelling page with Genially Scrolly (a story, course, report or product launch) from a prompt and a style. Asks a few short questions, then writes a brief and storyboard, builds, checks on desktop and phone, and publishes. Use for /geniallyscrolly, scrollytelling, scroll story, pagina con scroll, or edits to a Genially Scrolly project.
 ---
 
 # /geniallyscrolly
 
-Genially Scrolly turns a prompt, a style and some content into a finished scrollytelling page: plain HTML where every effect is one `data-scrolly="…"` attribute, run by a small runtime on GSAP. This skill is the guide. It interviews the user once, writes a brief and a storyboard, builds from a template, checks the page on desktop and phone, and ships it. Follow the steps in order and do not skip the checks.
+Genially Scrolly turns a prompt, a style and some content into a finished scrollytelling page: plain HTML where every effect is one `data-scrolly="…"` attribute, run by a small runtime on GSAP. This skill is the guide. It asks a few short questions, writes a brief and a storyboard, builds from a template, checks the page on desktop and phone, and ships it. Follow the steps in order and do not skip the checks.
 
-Read these only when the step needs them. They sit next to this file when the skill was installed from the repo or plugin; if they are not there (for example a skill saved in claude.ai), read them from the Genially Scrolly kit artifact https://claude.ai/artifact/3AxBwAigAPXUndwHiXwPSw with the Artifact tool, `action: "read"`, `path: "skills/geniallyscrolly/<file>"`:
+Read these only when the step needs them. They sit next to this file when the skill was installed from the repo, the plugin or the skill ZIP. If they are not there (for example a skill saved in claude.ai with only this file), fetch them from the public repo: `https://raw.githubusercontent.com/RafaelFernandezGenially/genially-scrolly/main/skills/geniallyscrolly/<file>` (or `https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@main/skills/geniallyscrolly/<file>`):
 `references/intent-interview.md` · `references/routes/<route>.md` · `references/blocks.md` · `references/style-system.md` · `references/motion-rules.md` · `references/data-viz.md` · `references/learning-design.md` · `references/media.md` · `references/accessibility-performance.md` · `references/publishing.md` · `references/pro-and-licensing.md` · `references/troubleshooting.md`
 
 ## 0. Find the kit
@@ -16,8 +16,12 @@ You need four things from the kit: `packages/runtime/dist/scrolly.js`, `scrolly.
 
 1. The current project already has `vendor/scrolly/scrolly.js` → it is a Genially Scrolly project; go to step 1 with state "existing project".
 2. The repo is on disk (a `genially-scrolly/` folder, or `npx genially-scrolly --help` works) → use the CLI: `npx genially-scrolly init`, `add`, `lint`, `verify`.
-3. Inside claude.ai with the Artifact tool: read the kit from the published **Genially Scrolly** artifact (the whole repo, URL in `references/publishing.md`) with `action: "read"` and `path`, e.g. `packages/runtime/dist/scrolly.js`, `registry/registry.json`, `templates/story/body.html`, `skills/geniallyscrolly/references/blocks.md`. List its files with `action: "list", scope: "files"`. Copy what you need into the new project's own folder before publishing it.
-4. None of these → tell the user in one line how to install it (`npx skills add RafaelFernandezGenially/genially-scrolly` then `npx genially-scrolly init`), and meanwhile build with the snippets in `references/blocks.md` and the runtime from the kit artifact.
+3. Anywhere else, including claude.ai: use the public repo. **Pages load the runtime straight from the CDN** — no install, no copying:
+   - `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/packages/runtime/dist/scrolly.min.css">`
+   - `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/styles/presets.css">`
+   - `<script src="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/packages/runtime/dist/scrolly.min.js"></script>` (after gsap + ScrollTrigger; the page skeleton is in `references/publishing.md`)
+   Read the catalogue and templates the same way: `https://raw.githubusercontent.com/RafaelFernandezGenially/genially-scrolly/main/registry/registry.json`, `https://raw.githubusercontent.com/RafaelFernandezGenially/genially-scrolly/main/templates/<route>/body.html`, `https://raw.githubusercontent.com/RafaelFernandezGenially/genially-scrolly/main/registry/effects/<effect>.html`, `https://raw.githubusercontent.com/RafaelFernandezGenially/genially-scrolly/main/styles/presets.json`, `https://raw.githubusercontent.com/RafaelFernandezGenially/genially-scrolly/main/styles/fonts.json`. Sample pictures and videos: `https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/examples/kitchen-sink/assets/<file>` (replace them with the user's own).
+4. The CLI without installing anything: `npx github:RafaelFernandezGenially/genially-scrolly <command>` (needs Node 18+).
 
 ## 1. Start from the project state
 

@@ -17,5 +17,12 @@
   },
   "devDependencies": {
     "esbuild": "^0.24.0"
+  },
+  "bin": {
+    "genially-scrolly": "packages/cli/bin/scrolly.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaelFernandezGenially/genially-scrolly.git"
   }
 }

@@ -39,18 +39,31 @@ npx skills add RafaelFernandezGenially/genially-scrolly            # pick skills
 npx skills add RafaelFernandezGenially/genially-scrolly --all      # all three
 ```
 
-**claude.ai**: install the `/geniallyscrolly` skill; it reads the runtime and the catalogue from the published [Genially Scrolly kit](https://claude.ai/artifact/3AxBwAigAPXUndwHiXwPSw) (share it with your team so their sessions can read it).
+**claude.ai** (no admin needed on Team plans, where user skills are on by default)
+1. Download [`geniallyscrolly-skill.zip`](https://github.com/RafaelFernandezGenially/genially-scrolly/releases/latest/download/geniallyscrolly-skill.zip).
+2. In Claude: **Customize → Skills → + → Create skill → Upload a skill**, and choose the ZIP. Make sure it is switched on.
+3. In a new chat, write `/geniallyscrolly` and what you want, e.g. *"a scrollytelling about how our onboarding works, playful, with a quiz"*.
+
+Pages made this way load the runtime from this public repo through jsDelivr, so nothing else needs installing or sharing.
 
 ### By hand
 ```bash
-npx genially-scrolly init my-story --template story --theme editorial --title "The river"
+npx github:RafaelFernandezGenially/genially-scrolly init my-story --template story --theme editorial --title "The river"
 cd my-story
-npx genially-scrolly preview      # http://localhost:5173
-npx genially-scrolly lint         # structure, accessibility, licence rules
-npx genially-scrolly verify       # desktop + phone screenshots (Playwright)
-npx genially-scrolly build        # host-ready folder
+npx github:RafaelFernandezGenially/genially-scrolly preview   # http://localhost:5173
+npx github:RafaelFernandezGenially/genially-scrolly lint      # structure, accessibility, licence rules
+npx github:RafaelFernandezGenially/genially-scrolly verify    # desktop + phone screenshots (Playwright)
+npx github:RafaelFernandezGenially/genially-scrolly build     # host-ready folder
 ```
-Requirements: Node 18+. `verify` needs Playwright.
+Requirements: Node 18+. `verify` needs Playwright. Or skip the CLI and load the runtime from the CDN:
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/packages/runtime/dist/scrolly.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/styles/presets.css">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/packages/runtime/dist/scrolly.min.js"></script>
+<script>Scrolly.init();</script>
+```
 
 ## What you can build
 
