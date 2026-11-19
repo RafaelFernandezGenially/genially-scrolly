@@ -5,12 +5,12 @@ import {readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, readdi
 import {join, dirname, resolve, extname, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createServer} from 'node:http';
-import {spawnSync} from 'node:child_process';
+import {spawnSync, spawn} from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 // inside the npm package the kit is bundled in ../kit; in the repo it is the repo root
 const KIT = existsSync(resolve(HERE, '../kit/registry/registry.json')) ? resolve(HERE, '../kit') : resolve(HERE, '../../..');
-const VERSION = '0.2.0';
+const VERSION = '0.3.0';
 const C = {b:s=>`\x1b[1m${s}\x1b[0m`, g:s=>`\x1b[32m${s}\x1b[0m`, y:s=>`\x1b[33m${s}\x1b[0m`, r:s=>`\x1b[31m${s}\x1b[0m`, d:s=>`\x1b[2m${s}\x1b[0m`, m:s=>`\x1b[35m${s}\x1b[0m`};
 const args = process.argv.slice(2), cmd = args[0] || 'help';
 const flag = (n, d) => { const i = args.indexOf('--' + n); if(i < 0) return d; const v = args[i+1]; return (!v || v.startsWith('--')) ? true : v; };
@@ -19,6 +19,18 @@ const readJSON = p => JSON.parse(readFileSync(p, 'utf8'));
 const presets = () => readJSON(join(KIT, 'styles/presets.json'));
 const fonts = () => readJSON(join(KIT, 'styles/fonts.json'));
 const registry = () => readJSON(join(KIT, 'registry/registry.json'));
+const CDN = `https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v${VERSION}`;
+// sample pictures in snippets: keep local ones, take the rest from the public repo
+const localizeAssets = (html, dir) => html.replace(/(["'(,])assets\/([^"'),\s]+)/g, (m, q, f) => existsSync(join(dir, 'assets', f.replace(/\{\d+\}/, '00'))) ? m : `${q}${CDN}/examples/kitchen-sink/assets/${f}`);
+const TYPES = {'.html':'text/html; charset=utf-8', '.js':'application/javascript; charset=utf-8', '.mjs':'application/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json', '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.webp':'image/webp', '.avif':'image/avif', '.mp4':'video/mp4', '.webm':'video/webm', '.mp3':'audio/mpeg', '.wav':'audio/wav', '.woff2':'font/woff2'};
+const openBrowser = url => { try { const [c, a] = process.platform === 'darwin' ? ['open', [url]] : process.platform === 'win32' ? ['cmd', ['/c', 'start', '', url]] : ['xdg-open', [url]]; spawn(c, a, {stdio:'ignore', detached:true}).on('error', ()=>{}).unref(); } catch(e){} };
+// injected into the studio draft so the canvas can select sections
+const STUDIO_HELPER = `<script>(()=>{ if(parent === window) return; const st = document.createElement('style'); st.textContent = '[data-sc-i]{transition:outline-color .15s}[data-sc-i].sc-st-h{outline:2px dashed #6C29FF;outline-offset:-4px}[data-sc-i].sc-st-s{outline:3px solid #6C29FF;outline-offset:-4px}'; document.head.appendChild(st);
+  let h; addEventListener('mouseover', e=>{ const s = e.target.closest('[data-sc-i]'); if(h && h !== s) h.classList.remove('sc-st-h'); if(s){ s.classList.add('sc-st-h'); h = s; } });
+  addEventListener('click', e=>{ const a = e.target.closest('a[href]'); if(a) e.preventDefault(); const s = e.target.closest('[data-sc-i]'); if(s) parent.postMessage({sc:'select', i:+s.dataset.scI}, '*'); }, true);
+  addEventListener('message', e=>{ const d = e.data || {}; if(d.sc === 'select'){ document.querySelectorAll('.sc-st-s').forEach(x=>x.classList.remove('sc-st-s')); const s = document.querySelector('[data-sc-i="' + d.i + '"]'); if(s){ s.classList.add('sc-st-s'); if(d.scroll) s.scrollIntoView({block:'start'}); } } if(d.sc === 'scroll') scrollTo(0, d.y); });
+  let t; addEventListener('scroll', ()=>{ clearTimeout(t); t = setTimeout(()=>parent.postMessage({sc:'y', y:scrollY}, '*'), 120); }, {passive:true});
+  addEventListener('load', ()=>setTimeout(()=>parent.postMessage({sc:'ready'}, '*'), 300)); })();<\/script>`;
 const LIBS = {gsap:'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/', lenis:'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js'};
 
 function page({title, theme, body, plugins=[], description=''}){
@@ -65,6 +77,7 @@ ${C.b('Explore')}
   templates                         starter templates
 ${C.b('Check & ship')}
   lint [file]                       structure, accessibility, performance, licence rules
+  studio [dir] [--port 5174]        open Scrolly Studio, a visual editor, in your browser
   preview [dir] [--port 5173]       local server
   verify [dir]                      desktop + phone screenshots and console errors (needs Playwright)
   build [dir] [--out dist]          copy a ready-to-host folder
@@ -95,11 +108,11 @@ ${C.b('Agents')}
   add(){ const name = pos[0]; const reg = registry(); const b = reg.blocks.find(x=>x.name === name), e = reg.effects.find(x=>x.name === name || x.id === name);
     if(!b && !e){ const q = String(name || '').toLowerCase(); const near = [...reg.blocks.map(x=>[x.name, x.title]), ...reg.effects.map(x=>[x.name, x.title])].filter(([n, t])=>q && (n.includes(q) || t.toLowerCase().includes(q))).map(x=>x[0]); console.error(C.r(`No block or effect "${name}".`) + (near.length ? ` Did you mean: ${[...new Set(near)].join(', ')}?` : ' Run: scrolly catalog  or  scrolly catalog --effects')); process.exit(1); }
     const snippet = b ? b.snippet : readFileSync(join(KIT, 'registry/effects', e.name + '.html'), 'utf8').replace(/^<!--.*?-->\n/, '').trim();
-    const blk = b || reg.blocks.find(x=>x.name === e.block) || {}; const title = b ? b.title : e.title;
-    const to = flag('to'); const snip = `\n<!-- ${title} -->\n${snippet}\n`;
+    const blk = b || reg.blocks.find(x=>x.name === e.block) || {}; const title = b ? b.title : e.title; const to0 = flag('to'); const snippetL = localizeAssets(snippet, to0 && to0 !== true ? dirname(resolve(to0)) : process.cwd());
+    const to = flag('to'); const snip = `\n<!-- ${title} -->\n${snippetL}\n`;
     if(!to || to === true){ console.log(snip); if(blk.params) console.log(C.d(`block ${blk.name} · params: ${JSON.stringify(blk.params)}`)); if(e && e.note) console.log(C.y(e.note)); return; }
     const html = readFileSync(to, 'utf8'); if(!html.includes('</main>')){ console.error(C.r('No </main> in ' + to)); process.exit(1); }
-    if(/assets\//.test(snippet)) console.log(C.y('The snippet uses sample pictures from assets/: replace them with yours (or copy examples/kitchen-sink/assets).'));
+    if(snippetL.includes(CDN)) console.log(C.y('The snippet uses sample pictures from the public repo: replace them with your own in assets/.'));
     writeFileSync(to, html.replace('</main>', `<section class="sc-section sc-wrap">${snip}</section>\n</main>`)); console.log(`${C.g('✓')} Added ${C.b(name)} to ${to}. ${blk.pin ? C.y('It pins the page: keep pinned blocks to about one per screenful.') : ''}${e && e.note ? '\n  ' + C.y(e.note) : ''}`); },
 
   catalog(){ const reg = registry(), q = String(flag('search', '') || '').toLowerCase(), cat = String(flag('category', '') || '').toLowerCase();
@@ -125,7 +138,7 @@ ${C.b('Agents')}
     const iG = h.search(/gsap@[\d.]+\/dist\/gsap\.min\.js/), iST = h.search(/ScrollTrigger\.min\.js/), iS = h.search(/scrolly(\.min)?\.js/);
     if(iG < 0 || iST < 0) E('gsap and ScrollTrigger must be loaded (pinned versions from cdn.jsdelivr.net).'); else if(iS > -1 && (iS < iG || iS < iST)) E('Load gsap and ScrollTrigger before scrolly.js.');
     if(!/Scrolly\.init\(|data-auto/.test(h)) E('Call Scrolly.init() after scrolly.js (or add data-auto to its script tag).');
-    [...h.matchAll(/src="(https?:[^"]+)"/g)].forEach(m=>{ if(/@(latest|\d+)\//.test(m[1]) || (/jsdelivr|unpkg/.test(m[1]) && !/@\d+\.\d+\.\d+/.test(m[1]))) W(`Pin an exact version: ${m[1]}`); });
+    [...h.matchAll(/src="(https?:[^"]+)"/g)].forEach(m=>{ if(/@(latest|\d+)\//.test(m[1]) || (/jsdelivr|unpkg/.test(m[1]) && !/@v?\d+\.\d+\.\d+/.test(m[1]))) W(`Pin an exact version: ${m[1]}`); });
     [...h.matchAll(/<img\b[^>]*>/g)].forEach(m=>{ if(!/\balt=/.test(m[0])) E(`Image without alt text: ${m[0].slice(0, 80)}`); });
     const pins = used.filter(n=>{ const b = reg.blocks.find(x=>x.name === n); return b && b.pin; }).length + (h.match(/data-scrolly="counter"[^>]*data-pin/g) || []).length;
     if(pins > 8) W(`${pins} pinned blocks. Each pin adds a stretch of scroll; above ~8 the page feels long. Consider steps or plain sections for some.`); else I(`${pins} pinned blocks.`);
@@ -138,6 +151,35 @@ ${C.b('Agents')}
     try { for(const f of readdirSync(join(dirname(file), 'assets'))){ const s = statSync(join(dirname(file), 'assets', f)); if(s.isFile() && s.size > 10*1024*1024) W(`assets/${f} is ${(s.size/1048576).toFixed(1)} MB: compress it (video: ffmpeg -crf 28, images: WebP).`); } } catch(e){}
     const n = {error:0, warn:0}; out.forEach(([k,m])=>{ if(k !== 'info') n[k]++; console.log(`${k === 'error' ? C.r('✗ error') : k === 'warn' ? C.y('! warn ') : C.d('· info ')} ${m}`); });
     console.log(`\n${used.length} blocks · ${n.error} errors · ${n.warn} warnings`); if(n.error) process.exit(1); },
+
+  studio(){ const dir = resolve(pos[0] || '.'), port = +flag('port', 5174), file = join(dir, 'index.html');
+    if(!existsSync(file)){ console.error(C.r(`No index.html in ${dir}. Create one first: npx genially-scrolly init ${pos[0] || 'my-page'}`)); process.exit(1); }
+    let draft = null; const reg = registry(), studioHtml = join(dirname(fileURLToPath(import.meta.url)), '../studio/studio.html');
+    const body = q => new Promise(res=>{ const c = []; q.on('data', d=>c.push(d)); q.on('end', ()=>res(Buffer.concat(c))); });
+    const send = (r, code, data, type='text/plain; charset=utf-8') => { r.writeHead(code, {'content-type':type, 'cache-control':'no-store'}); r.end(data); };
+    const listAssets = () => { const out = []; const walk = d => { if(!existsSync(d)) return; for(const f of readdirSync(d)){ const p = join(d, f); if(statSync(p).isDirectory()) walk(p); else if(/\.(png|jpe?g|gif|webp|avif|svg|mp4|webm)$/i.test(f)) out.push(relative(dir, p).split('\\').join('/')); } }; walk(join(dir, 'assets')); return out.slice(0, 300); };
+    createServer(async (q, r)=>{ const url = new URL(q.url, 'http://x'), p = decodeURIComponent(url.pathname);
+      try {
+        if(p === '/' || p === '/__studio' || p === '/__studio/') return send(r, 200, readFileSync(studioHtml), TYPES['.html']);
+        if(p === '/__studio/api/source') return send(r, 200, readFileSync(file), TYPES['.html']);
+        if(p === '/__studio/api/registry') return send(r, 200, JSON.stringify({blocks:reg.blocks.map(({name, title, category, pin})=>({name, title, category, pin})), effects:reg.effects, presets:presets(), fonts:fonts()}), TYPES['.json']);
+        if(p.startsWith('/__studio/api/effect/')){ const name = p.split('/').pop(), e = reg.effects.find(x=>x.name === name); if(!e) return send(r, 404, 'no effect');
+          return send(r, 200, localizeAssets(readFileSync(join(KIT, 'registry/effects', e.name + '.html'), 'utf8').replace(/^<!--.*?-->\n/, '').trim(), dir)); }
+        if(p === '/__studio/api/assets') return send(r, 200, JSON.stringify(listAssets()), TYPES['.json']);
+        if(q.method === 'POST' && p === '/__studio/api/draft'){ draft = (await body(q)).toString('utf8'); return send(r, 200, 'ok'); }
+        if(q.method === 'POST' && p === '/__studio/api/save'){ const html = (await body(q)).toString('utf8'); if(!/<html[\s>]/i.test(html)) return send(r, 400, 'Not an HTML page');
+          const hist = join(dir, '.scrolly/history'); mkdirSync(hist, {recursive:true}); copyFileSync(file, join(hist, `index-${new Date().toISOString().replace(/[:.]/g, '-')}.html`));
+          writeFileSync(file, html); console.log(`${C.g('✓')} Saved ${relative(process.cwd(), file) || 'index.html'}`); return send(r, 200, 'saved'); }
+        if(q.method === 'POST' && p === '/__studio/api/upload'){ const name = (url.searchParams.get('name') || 'file').toLowerCase().replace(/[^a-z0-9._-]+/g, '-').replace(/^-+/, '').slice(0, 80) || 'file';
+          if(!/\.(png|jpe?g|gif|webp|avif|svg|mp4|webm|mp3|wav)$/.test(name)) return send(r, 400, 'Images, video or audio only');
+          mkdirSync(join(dir, 'assets'), {recursive:true}); let out = name, k = 1; while(existsSync(join(dir, 'assets', out))) out = name.replace(/(\.[a-z0-9]+)$/, `-${k++}$1`);
+          writeFileSync(join(dir, 'assets', out), await body(q)); return send(r, 200, JSON.stringify({path:'assets/' + out}), TYPES['.json']); }
+        if(p === '/__draft__.html'){ const html = draft || readFileSync(file, 'utf8'); return send(r, 200, url.searchParams.has('plain') ? html : html.replace(/<\/body>/i, STUDIO_HELPER + '\n</body>'), TYPES['.html']); }
+        const f = join(dir, p.endsWith('/') ? p + 'index.html' : p); if(!f.startsWith(dir) || !existsSync(f) || statSync(f).isDirectory()) return send(r, 404, 'not found');
+        return send(r, 200, readFileSync(f), TYPES[extname(f).toLowerCase()] || 'application/octet-stream');
+      } catch(e){ send(r, 500, String(e && e.message || e)); }
+    }).listen(port, '127.0.0.1', ()=>{ const u = `http://localhost:${port}/__studio/`; console.log(`${C.m('●')} ${C.b('Scrolly Studio')} on ${C.b(u)}\n  ${C.d('Edit sections, insert any of the 111 effects, change style and assets. Save writes index.html (copies in .scrolly/history).')}\n  ${C.d('Ctrl+C to stop.')}`); if(!flag('no-open')) openBrowser(u); }); },
+  edit(){ commands.studio(); },
 
   preview(){ const dir = resolve(pos[0] || '.'), port = +flag('port', 5173); const types = {'.html':'text/html; charset=utf-8', '.js':'application/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json', '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.webp':'image/webp', '.mp4':'video/mp4', '.webm':'video/webm', '.woff2':'font/woff2'};
     createServer((q, r)=>{ let p = decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/')) p += 'index.html'; const f = join(dir, p); if(!f.startsWith(dir) || !existsSync(f)){ r.writeHead(404); r.end('not found'); return; } r.writeHead(200, {'content-type':types[extname(f)] || 'application/octet-stream'}); r.end(readFileSync(f)); })

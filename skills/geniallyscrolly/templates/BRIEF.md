@@ -7,6 +7,7 @@
 - **Tone:**
 - **Route:** story | course | report | launch | custom
 - **Style preset / brand:**  (preset name, or brand colours + fonts, or reference image/URL)
+- **User's visual resources:** logo · images · video · colours (hex) · fonts (names) → where each one goes
 - **Feel / motion intensity:** calm | lively (medium) | spectacular (hero) | playful
 - **Must-have moments:** (3D · data · film scrub · moving type · activities · journey · toys)
 - **Avoid:** (anything the user does not want)
@@ -18,6 +19,8 @@
 - **Key finding (report only):**
 - **Call to action (last beat):**
 - **Commercial use:** no | yes | unknown  → licence note needed: yes/no
+- **AI media invitation (step 5):** asked yes/no → wanted: images · audio · video · none → told: paid plan
+- **Watermark / tracking invitation (step 8):** asked yes/no → answer
 - **Pro features requested:** none | no mark | analytics | AI images | publish to Genially  (all need a licence + the Genially connection, not live in this release)
 - **Assumptions made:**
 - **Out of scope:**

@@ -12,4 +12,6 @@ rmSync(join(kit, 'registry/lab-reference.json'), {force:true});
 for(const p of ['packages/cli', 'packages/runtime']){ copyFileSync(join(root, 'LICENSE.md'), join(root, p, 'LICENSE.md')); }
 copyFileSync(join(root, 'README.md'), join(root, 'packages/cli/README.md'));
 mkdirSync(join(root, 'dist-npm'), {recursive:true});
+try {
 for(const [p, d] of [['packages/runtime', 'runtime'], ['packages/cli', 'cli']]){ mkdirSync(join(root, 'dist-npm', d), {recursive:true}); console.log(d + ': ' + execSync(`npm pack --pack-destination ${join(root, 'dist-npm', d)}`, {cwd:join(root, p)}).toString().trim().split('\n').pop()); }
+} finally { rmSync(kit, {recursive:true, force:true}); } // keep the repo CLI pointing at the repo

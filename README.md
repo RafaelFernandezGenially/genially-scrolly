@@ -57,13 +57,23 @@ npx github:RafaelFernandezGenially/genially-scrolly build     # host-ready folde
 ```
 Requirements: Node 18+. `verify` needs Playwright. Or skip the CLI and load the runtime from the CDN:
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/packages/runtime/dist/scrolly.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/styles/presets.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.3.0/packages/runtime/dist/scrolly.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.3.0/styles/presets.css">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.2.0/packages/runtime/dist/scrolly.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/RafaelFernandezGenially/genially-scrolly@v0.3.0/packages/runtime/dist/scrolly.min.js"></script>
 <script>Scrolly.init();</script>
 ```
+
+## Scrolly Studio
+
+A visual editor that looks and feels like a reduced Genially editor, for the page you just made:
+
+```bash
+npx github:RafaelFernandezGenially/genially-scrolly studio my-story   # opens http://localhost:5174/__studio/
+```
+
+Layers, insert any of the 111 effects, edit texts, images and chart data, brand colours and fonts, upload assets, desktop and phone preview, undo, and **Save** (writes `index.html`, keeps every version in `.scrolly/history/`). AI creation (images, voice, music, video), reader analytics, removing the watermark and publishing on Genially are part of Genially's paid plans.
 
 ## What you can build
 

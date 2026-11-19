@@ -3,10 +3,10 @@
 The Genially Scrolly runtime: scrollytelling blocks as HTML attributes, on GSAP ScrollTrigger.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@genially/scrolly@0.2.0/dist/scrolly.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@genially/scrolly@0.3.0/dist/scrolly.min.css">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@genially/scrolly@0.2.0/dist/scrolly.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@genially/scrolly@0.3.0/dist/scrolly.min.js"></script>
 
 <p class="sc-h2" data-scrolly="words">Most content is made to be looked at.</p>
 <div data-scrolly="chart"><script type="application/json">{"type":"globe","source":"sample","stops":[["Córdoba",-4.78,37.89],["New York",-74,40.71]]}</script></div>

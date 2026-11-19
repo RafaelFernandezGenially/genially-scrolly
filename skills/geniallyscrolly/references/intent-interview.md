@@ -32,14 +32,20 @@ Keep labels to 1–5 words and put the trade-off in the option description. Reco
    - Playful and interactive: things to click, drag, answer
    Sets motion intensity (calm / medium / hero) and the share of interactive blocks. Default: lively.
 
-## Round 2 · what to build with (adapt, up to 4 questions)
+## Round 2 · what to build with (adapt, up to 4 questions: 5, 6, 7 and 8 when needed)
 
-5. **Content you have** (multi-select) · "What do you already have?"
+5. **Your visual resources** (multi-select, always ask) · "¿Tienes recursos visuales, colores o fuentes que quieras que incluya?" / "Do you have visuals, colours or fonts you want me to include?"
+   - Logo, images or video
+   - Brand colours
+   - Brand fonts
+   - No, use a Genially Scrolly style
+   Any "yes" triggers the follow-up below: ask them to attach the files or paste the hex codes and font names. Use every one: colours and fonts become tokens (`style-system.md`), files go to `assets/` and into the beats that fit, the logo goes in the opening. Default: no (use the chosen preset).
+
+5b. **Content you have** (multi-select; fold into question 5 when the round is full) · "What else do you already have?"
    - Text or a script
    - Numbers or a spreadsheet
-   - Images, video or a logo
-   - Nothing yet: write it and make the visuals
-   Default: nothing (you write the copy; visuals from SVG/CSS, 3D, particles and charts with sample data marked "sample").
+   - Nothing yet: write it for me
+   Default: nothing (you write the copy; charts with sample data marked "sample").
 
 6. **Must-have moments** (multi-select, 4 options chosen to fit route + feel; never list blocks by name). Pick from:
    - 3D and WebGL (fly-through world, objects, particles, 3D charts) → `world3d`, `object3d`, `particles`, `bars3d`, `layers3d`, `distort`
@@ -69,7 +75,7 @@ If round 2 would only have one real question, fold it into round 1 instead (stil
 
 Ask in plain text or one more question call, only for what you cannot proceed without:
 
-- Style = brand / reference → "Share your colours, fonts, logo or a link/screenshot." Then follow `style-system.md` (tokens, contrast check).
+- Visual resources = yes, or style = brand / reference → "Pásame tus colores (hex), el nombre de tus fuentes y adjunta el logo o las imágenes" / "Share your colours, fonts, logo or a link/screenshot." Then follow `style-system.md` (tokens, contrast check) and `media.md`. If they attach nothing, say what you used instead.
 - Content includes numbers → "Attach the spreadsheet or paste the numbers, and tell me the source." Real data is marked `"source":"real"`; anything you invent is `"sample"` and said so in the page.
 - Route = course → "What should learners be able to do at the end, and how do we check it?" (`learning-design.md`).
 - Route = report → "What is the one number or finding people must remember?"

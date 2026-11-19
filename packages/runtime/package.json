@@ -1,6 +1,6 @@
 {
   "name": "@genially/scrolly",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Genially Scrolly runtime: data-scrolly blocks on GSAP ScrollTrigger.",
   "main": "dist/scrolly.js",
   "style": "dist/scrolly.css",

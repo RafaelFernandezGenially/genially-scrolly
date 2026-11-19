@@ -1,7 +1,7 @@
 {
   "name": "genially-scrolly-monorepo",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Scrollytelling from a prompt: runtime, CLI, templates and agent skills.",
   "license": "SEE LICENSE IN LICENSE.md",
   "workspaces": [

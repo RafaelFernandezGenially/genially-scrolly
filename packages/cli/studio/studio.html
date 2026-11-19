@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrolly Studio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=DM+Sans:opsz,wght@9..40,400..700&family=DM+Mono:wght@500&display=swap">
+<style>
+  :root{--p:#6C29FF;--p2:#5418E0;--lime:#C8FE53;--pink:#F73C69;--ink:#16141F;--mut:#6E6A80;--line:#E7E4F0;--bg:#F4F2FA;--panel:#fff;--rail:#16141F;--sel:#EFE8FF;--r:12px}
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{font:14px/1.4 'DM Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);display:grid;grid-template-rows:56px 1fr;overflow:hidden}
+  button,input,select,textarea{font:inherit;color:inherit}
+  button{cursor:pointer}
+  .top{display:flex;align-items:center;gap:10px;padding:0 12px;background:var(--panel);border-bottom:1px solid var(--line)}
+  .logo{font:800 18px Unbounded,sans-serif;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap}.logo i{color:var(--p);font-style:normal}
+  .pill{font:500 11px 'DM Mono',monospace;background:var(--sel);color:var(--p);padding:4px 8px;border-radius:999px;white-space:nowrap}
+  .title{border:1px solid transparent;border-radius:8px;padding:6px 8px;min-width:120px;max-width:280px;background:none;font-weight:600}
+  .title:hover,.title:focus{border-color:var(--line);outline:none}
+  .seg{display:flex;background:var(--bg);border-radius:10px;padding:3px;margin:0 auto}
+  .seg button{border:0;background:none;padding:6px 10px;border-radius:8px;display:flex;align-items:center;gap:6px;color:var(--mut)}
+  .seg button[aria-pressed=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .btn{text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .btn:hover{border-color:#cfc9e2}
+  .btn.p{background:var(--p);border-color:var(--p);color:#fff}.btn.p:hover{background:var(--p2)}
+  .btn.l{background:var(--lime);border-color:var(--lime);color:#121212}
+  .btn.s{padding:6px 9px;font-size:13px}
+  .btn:disabled{opacity:.45;cursor:default}
+  .crown{color:#E5A100}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--pink);display:none}.dirty .dot{display:inline-block}
+  .main{display:grid;grid-template-columns:64px 300px 1fr 320px;min-height:0}
+  .rail{background:var(--rail);display:flex;flex-direction:column;gap:4px;padding:10px 8px}
+  .rail button{border:0;background:none;color:#B8B3CC;border-radius:10px;padding:8px 0;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;font-weight:600}
+  .rail button svg{width:22px;height:22px}
+  .rail button[aria-selected=true],.rail button:hover{background:#2A2638;color:#fff}
+  .rail .sp{flex:1}
+  .panel{background:var(--panel);border-right:1px solid var(--line);overflow:auto;min-height:0}
+  .panel h2{font:800 15px Unbounded,sans-serif;margin:16px 16px 4px}
+  .panel .sub{color:var(--mut);margin:0 16px 12px;font-size:13px}
+  .pad{padding:0 16px 16px}
+  .search{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+  .chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 9px;font-size:12px}
+  .chips button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .card{border:1px solid var(--line);border-radius:var(--r);padding:10px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center}
+  .card:hover{border-color:var(--p)}
+  .card b{font-size:13.5px}.card small{color:var(--mut);font-size:12px;grid-column:1}
+  .card .btn{grid-row:1/3;grid-column:2}
+  .tag{font:500 10px 'DM Mono',monospace;background:var(--bg);border-radius:6px;padding:1px 5px;margin-left:4px;color:var(--mut)}
+  .layers{list-style:none;margin:0;padding:0 8px 16px}
+  .layers li{display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;cursor:pointer}
+  .layers li:hover{background:var(--bg)}
+  .layers li[aria-selected=true]{background:var(--sel);color:var(--p)}
+  .layers .n{font:500 11px 'DM Mono',monospace;color:var(--mut);width:22px}
+  .layers .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .canvas{position:relative;overflow:hidden;display:grid;place-items:center;min-height:0;background:var(--bg) radial-gradient(#dcd7ea 1px,transparent 1px) 0 0/18px 18px}
+  .frame{background:#fff;border-radius:10px;box-shadow:0 10px 40px rgba(30,20,60,.18);overflow:hidden;position:absolute;left:50%;top:50%;transform-origin:50% 50%}
+  .frame iframe{border:0;width:100%;height:100%;display:block}
+  .frame.phone{border-radius:34px;border:10px solid #16141F}
+  .insp{background:var(--panel);border-left:1px solid var(--line);overflow:auto;min-height:0}
+  .empty{color:var(--mut);padding:24px 16px;text-align:center}
+  .row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  label.f{display:block;font-size:12px;font-weight:600;color:var(--mut);margin:12px 0 4px}
+  textarea.f,input.f,select.f{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff}
+  textarea.f{min-height:60px;resize:vertical}
+  textarea.code{font:12px/1.45 'DM Mono',monospace;min-height:140px}
+  textarea.f:focus,input.f:focus,select.f:focus{outline:2px solid var(--sel);border-color:var(--p)}
+  .err{color:var(--pink);font-size:12px;margin-top:4px}
+  .presets{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .preset{border:2px solid var(--line);border-radius:12px;padding:8px;text-align:left;background:#fff}
+  .preset[aria-pressed=true]{border-color:var(--p)}
+  .preset .sw{display:flex;gap:3px;margin-bottom:6px}.preset .sw i{flex:1;height:22px;border-radius:5px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+  .preset b{font-size:12.5px}
+  .colors{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .colors label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-size:12.5px}
+  .colors input{width:28px;height:28px;border:0;padding:0;background:none}
+  .assets{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .asset{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;padding:0;text-align:left}
+  .asset img,.asset video{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--bg)}
+  .asset span{display:block;font-size:11px;padding:4px 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .drop{border:2px dashed #cfc9e2;border-radius:12px;padding:18px;text-align:center;color:var(--mut);margin-bottom:12px}
+  .ai{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:linear-gradient(135deg,#fff,#F7F3FF)}
+  .ai h3{margin:0 0 4px;font-size:14px;display:flex;align-items:center;gap:6px}
+  .ai p{margin:0 0 8px;color:var(--mut);font-size:12.5px}
+  .lock{display:grid;gap:8px}
+  .metric{border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center;color:var(--mut)}
+  .metric b{color:var(--ink)}
+  .modal{position:fixed;inset:0;background:rgba(22,20,31,.5);display:none;place-items:center;z-index:50}
+  .modal.on{display:grid}
+  .box{background:#fff;border-radius:20px;width:min(480px,92vw);padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+  .box h3{font:800 20px Unbounded,sans-serif;margin:8px 0}
+  .box ul{padding-left:18px;color:var(--mut)}
+  .box .foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+  .box .note{font-size:12px;color:var(--mut);background:var(--bg);border-radius:10px;padding:8px 10px}
+  .badge{display:inline-flex;align-items:center;gap:6px;font:600 12px 'DM Sans';background:#FFF4D6;color:#8A6100;border-radius:999px;padding:4px 10px}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;opacity:0;transition:opacity .3s;z-index:60;pointer-events:none}
+  .toast.on{opacity:1}
+  .hide{display:none!important}
+  @media (max-width:1100px){ .main{grid-template-columns:64px 260px 1fr} .insp{position:fixed;right:0;top:56px;bottom:0;width:300px;box-shadow:-10px 0 30px rgba(0,0,0,.1);transform:translateX(100%);transition:transform .25s} .insp.open{transform:none} }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="https://genially.com" target="_blank" rel="noopener">genially<i>.</i></a>
+  <span class="pill">Scrolly Studio</span>
+  <input class="title" id="title" aria-label="Title" value="">
+  <span class="dot" aria-hidden="true"></span>
+  <div class="seg" role="group" aria-label="Device">
+    <button data-dev="desktop" aria-pressed="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span data-t="desktop"></span></button>
+    <button data-dev="phone" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><span data-t="phone"></span></button>
+  </div>
+  <button class="btn s" id="undo" title="Ctrl+Z" disabled>↶</button>
+  <button class="btn s" id="redo" title="Ctrl+Shift+Z" disabled>↷</button>
+  <button class="btn s" id="preview" data-t="preview"></button>
+  <button class="btn s" id="mark"><span class="crown">♛</span><span data-t="removeMark"></span></button>
+  <button class="btn l" id="save" data-t="save"></button>
+  <button class="btn p" id="publish" data-t="publish"></button>
+</header>
+
+<div class="main">
+  <nav class="rail" role="tablist" aria-label="Panels">
+    <button role="tab" data-tab="layers" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 8l10 5 10-5-10-5zM2 16l10 5 10-5M2 12l10 5 10-5"/></svg><span data-t="tLayers"></span></button>
+    <button role="tab" data-tab="insert" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg><span data-t="tInsert"></span></button>
+    <button role="tab" data-tab="style" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="12" cy="7.5" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M12 21a3 3 0 0 1 0-6h3"/></svg><span data-t="tStyle"></span></button>
+    <button role="tab" data-tab="assets" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg><span data-t="tAssets"></span></button>
+    <button role="tab" data-tab="ai" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span data-t="tAI"></span></button>
+    <button role="tab" data-tab="analytics" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span data-t="tAnalytics"></span></button>
+    <span class="sp"></span>
+    <button data-tab="help" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01"/></svg><span data-t="tHelp"></span></button>
+  </nav>
+
+  <aside class="panel" id="panel"></aside>
+
+  <section class="canvas" id="canvas">
+    <div class="frame" id="frame"><iframe id="view" title="Page preview"></iframe></div>
+  </section>
+
+  <aside class="insp" id="insp"></aside>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="box">
+  <span class="badge"><span class="crown">♛</span> <span id="mBadge"></span></span>
+  <h3 id="mTitle"></h3>
+  <p id="mText"></p>
+  <ul id="mList"></ul>
+  <p class="note" id="mNote"></p>
+  <div class="foot"><button class="btn" id="mClose"></button><a class="btn p" id="mCta" href="https://genially.com/plans" target="_blank" rel="noopener"></a></div>
+</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const T = {
+  es: {desktop:'Escritorio', phone:'Móvil', preview:'Vista previa', removeMark:'Quitar marca de agua', save:'Guardar', saved:'Guardado en index.html', publish:'Publicar',
+    tLayers:'Capas', tInsert:'Insertar', tStyle:'Estilo', tAssets:'Recursos', tAI:'IA', tAnalytics:'Analítica', tHelp:'Ayuda',
+    layers:'Capas', layersSub:'Cada sección de tu página. Haz clic para editarla.', insert:'Insertar efectos', insertSub:'Los 111 efectos del Scroll Lab. Se añaden debajo de la sección seleccionada.', search:'Buscar efecto…', all:'Todos', add:'Añadir', pins:'fija',
+    style:'Estilo', styleSub:'Un estilo de la librería o los colores y fuentes de tu marca.', presets:'Estilos', colors:'Colores de marca', fonts:'Fuentes', display:'Títulos', body:'Texto', logo:'Logo', uploadLogo:'Subir logo', resetColors:'Quitar colores propios',
+    assets:'Recursos', assetsSub:'Tus imágenes y vídeos. Se guardan en la carpeta assets/ del proyecto.', drop:'Arrastra aquí imágenes o vídeos, o', choose:'elige archivos', useInSel:'Usar en la sección seleccionada', noAssets:'Aún no hay recursos.',
+    ai:'Crear con IA', aiSub:'Genera recursos con el estilo de tu página.', aiImage:'Imagen', aiImageP:'Ilustraciones y fotos con el estilo y los colores de tu página.', aiVoice:'Voz en off', aiVoiceP:'Narración natural para cada capítulo.', aiMusic:'Música y sonidos', aiMusicP:'Una banda sonora y efectos para los momentos clave.', aiVideo:'Vídeo', aiVideoP:'Clips para usar con el efecto de vídeo controlado por scroll.', describe:'Describe lo que quieres…', generate:'Generar',
+    analytics:'Analítica', analyticsSub:'Descubre cómo leen tu página.', mScroll:'Profundidad de scroll', mDone:'Lecturas completas', mQuiz:'Resultados de los quiz', mTime:'Tiempo por capítulo', mClicks:'Clics e interacciones', enableTracking:'Activar seguimiento',
+    help:'Ayuda', helpBody:'<p>Haz clic en una sección del lienzo o en Capas para editar sus textos, imágenes y datos.</p><p><b>Guardar</b> escribe <code>index.html</code>. Tienes una copia de cada versión en <code>.scrolly/history/</code>.</p><p>Para publicar: <code>npx github:RafaelFernandezGenially/genially-scrolly build</code> y sube la carpeta <code>dist</code> a cualquier hosting.</p>',
+    noSel:'Selecciona una sección en el lienzo o en Capas.', section:'Sección', up:'Subir', down:'Bajar', dup:'Duplicar', del:'Eliminar', texts:'Textos', images:'Imágenes', alt:'Texto alternativo', data:'Datos (JSON)', badJson:'JSON no válido: ', settings:'Ajustes', pickAsset:'Elegir de Recursos',
+    paid:'Plan de pago de Genially', close:'Ahora no', seePlans:'Ver planes de Genially', soon:'La conexión de Genially Scrolly con tu cuenta de Genially todavía no está disponible en esta versión. Mientras tanto puedes usar tus propios recursos.',
+    up_ai_t:'Crea imágenes, voz, música y vídeo con IA', up_ai_x:'La creación con IA de Genially genera recursos con el estilo de tu página y los coloca en su sitio.', up_ai_l:['Imágenes e ilustraciones con tu estilo','Voz en off y música','Vídeos para los efectos de scroll','Tu banco de recursos de Genially'],
+    up_mark_t:'Quita la marca de agua', up_mark_x:'La versión gratuita es para uso no comercial y lleva "Made with Genially Scrolly". Con un plan de pago la quitas y puedes usarlo en proyectos comerciales.', up_mark_l:['Sin marca de agua','Uso comercial y para clientes','Tu dominio y tu marca'],
+    up_track_t:'Mide a quién llega tu página', up_track_x:'El seguimiento de usuarios de Genially te dice quién lee, hasta dónde llega y qué responde.', up_track_l:['Profundidad de scroll y lecturas completas','Resultados de quiz y actividades','Informes por capítulo','Exportación a tu LMS (xAPI)'],
+    up_pub_t:'Publica en Genially', up_pub_x:'Gratis: descarga la carpeta con "build" y súbela a cualquier hosting. Con un plan de pago la publicas en Genially con un enlace, analítica y sin marca de agua.', up_pub_l:['Enlace de Genially listo para compartir','Analítica y sin marca','Equipos y espacios de trabajo'],
+    inserted:'Efecto añadido', removed:'Sección eliminada', uploaded:'Subido', unsaved:'Tienes cambios sin guardar.'},
+  en: {desktop:'Desktop', phone:'Phone', preview:'Preview', removeMark:'Remove watermark', save:'Save', saved:'Saved to index.html', publish:'Publish',
+    tLayers:'Layers', tInsert:'Insert', tStyle:'Style', tAssets:'Assets', tAI:'AI', tAnalytics:'Analytics', tHelp:'Help',
+    layers:'Layers', layersSub:'Each section of your page. Click one to edit it.', insert:'Insert effects', insertSub:'All 111 Scroll Lab effects. They go below the selected section.', search:'Search effects…', all:'All', add:'Add', pins:'pins',
+    style:'Style', styleSub:'A library style, or your brand colours and fonts.', presets:'Styles', colors:'Brand colours', fonts:'Fonts', display:'Headings', body:'Body', logo:'Logo', uploadLogo:'Upload logo', resetColors:'Remove custom colours',
+    assets:'Assets', assetsSub:'Your images and videos, saved in the project assets/ folder.', drop:'Drop images or videos here, or', choose:'choose files', useInSel:'Use in the selected section', noAssets:'No assets yet.',
+    ai:'Create with AI', aiSub:'Generate assets in your page style.', aiImage:'Image', aiImageP:'Illustrations and photos in your page style and colours.', aiVoice:'Voice-over', aiVoiceP:'Natural narration for each chapter.', aiMusic:'Music and sound', aiMusicP:'A soundtrack and effects for key moments.', aiVideo:'Video', aiVideoP:'Clips for the scroll-driven video effect.', describe:'Describe what you want…', generate:'Generate',
+    analytics:'Analytics', analyticsSub:'See how people read your page.', mScroll:'Scroll depth', mDone:'Completed reads', mQuiz:'Quiz results', mTime:'Time per chapter', mClicks:'Clicks and interactions', enableTracking:'Turn on tracking',
+    help:'Help', helpBody:'<p>Click a section on the canvas or in Layers to edit its text, images and data.</p><p><b>Save</b> writes <code>index.html</code>. Every version is kept in <code>.scrolly/history/</code>.</p><p>To publish: <code>npx github:RafaelFernandezGenially/genially-scrolly build</code> and upload the <code>dist</code> folder to any host.</p>',
+    noSel:'Select a section on the canvas or in Layers.', section:'Section', up:'Up', down:'Down', dup:'Duplicate', del:'Delete', texts:'Text', images:'Images', alt:'Alt text', data:'Data (JSON)', badJson:'Invalid JSON: ', settings:'Settings', pickAsset:'Pick from Assets',
+    paid:'Genially paid plan', close:'Not now', seePlans:'See Genially plans', soon:'Connecting Genially Scrolly to your Genially account is not available in this release yet. Meanwhile you can use your own assets.',
+    up_ai_t:'Create images, voice, music and video with AI', up_ai_x:'Genially AI creates assets in your page style and puts them in place.', up_ai_l:['Images and illustrations in your style','Voice-over and music','Videos for scroll effects','Your Genially asset library'],
+    up_mark_t:'Remove the watermark', up_mark_x:'The free version is for non-commercial use and shows "Made with Genially Scrolly". A paid plan removes it and allows commercial use.', up_mark_l:['No watermark','Commercial and client work','Your domain and brand'],
+    up_track_t:'See who your page reaches', up_track_x:'Genially user tracking tells you who reads, how far they get and what they answer.', up_track_l:['Scroll depth and completed reads','Quiz and activity results','Reports per chapter','Export to your LMS (xAPI)'],
+    up_pub_t:'Publish on Genially', up_pub_x:'Free: download the folder with "build" and upload it to any host. With a paid plan you publish it on Genially with a link, analytics and no watermark.', up_pub_l:['A Genially link ready to share','Analytics and no watermark','Teams and workspaces'],
+    inserted:'Effect added', removed:'Section removed', uploaded:'Uploaded', unsaved:'You have unsaved changes.'}
+};
+const L = (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en', t = k => T[L][k] ?? T.en[k] ?? k;
+document.documentElement.lang = L;
+document.querySelectorAll('[data-t]').forEach(e=>e.textContent = t(e.dataset.t));
+
+const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const API = '/__studio/api/';
+const BLEED = new Set(['horizontal','stack','kinetic','marquee','color-flow','zoom-through','portal','grow','shrink','curtain','deep-zoom','camera','video-scrub','sequence','colour-journey','road','ken-burns','world3d','object3d','bars3d','layers3d','lottie','theatre','deck','film-labels','waffle-steps','clock','giant-lines','opposite-columns','parallax-gallery','steps','dot-field','timeline','counter','particles']);
+const FONT_LIST = ['Unbounded','DM Sans','Inter','Inter Tight','Manrope','Poppins','Montserrat','Space Grotesk','Bricolage Grotesque','Fraunces','Playfair Display','Cormorant Garamond','Source Serif 4','Nunito','Baloo 2','Karla','Work Sans','Lora','Archivo','Syne'];
+
+const S = {doc:null, reg:null, presets:{}, fonts:{}, sel:-1, hist:[], fut:[], dirty:false, y:0, dev:'desktop', tab:'layers', cat:'', q:'', assets:[], pickFor:null};
+
+/* ---------- source document ---------- */
+const serialize = d => '<!doctype html>\n' + d.documentElement.outerHTML + '\n';
+const main = () => S.doc.querySelector('main') || S.doc.body;
+const sections = () => [...main().children].filter(e=>e.tagName !== 'SCRIPT');
+function label(el){ const s = el.querySelector('[data-scrolly]'); const blk = el.dataset.scrolly || (s && s.dataset.scrolly) || el.tagName.toLowerCase();
+  const h = el.querySelector('h1,h2,h3,.sc-h2,.sc-display,p,b,h4'); let txt = h ? h.textContent : '';
+  if(!txt.trim()){ const j = el.querySelector('script[type="application/json"]'); try { const d = JSON.parse(j.textContent); txt = d.title || (Array.isArray(d) && d[0] && (d[0].title || d[0].q)) || ''; } catch(e){} }
+  if(!txt.trim()) txt = [...el.querySelectorAll('*')].filter(n=>n.tagName !== 'SCRIPT' && n.children.length === 0).map(n=>n.textContent).join(' ');
+  txt = txt.trim().replace(/\s+/g,' ').slice(0,48); return {blk, txt: txt || blk}; }
+function commit(mut, {keepSel=true}={}){ S.hist.push(serialize(S.doc)); if(S.hist.length > 80) S.hist.shift(); S.fut = []; mut(); S.dirty = true; refresh(keepSel); }
+function load(html){ S.doc = new DOMParser().parseFromString(html, 'text/html'); }
+let draftT; function refresh(keepSel=true){ document.body.classList.toggle('dirty', S.dirty); $('#undo').disabled = !S.hist.length; $('#redo').disabled = !S.fut.length; $('#title').value = S.doc.title;
+  if(!keepSel || S.sel >= sections().length) S.sel = Math.min(S.sel, sections().length-1);
+  renderPanel(); renderInsp(); clearTimeout(draftT); draftT = setTimeout(pushDraft, 450); }
+async function pushDraft(){ const d = S.doc.cloneNode(true); [...(d.querySelector('main') || d.body).children].filter(e=>e.tagName !== 'SCRIPT').forEach((e,i)=>e.setAttribute('data-sc-i', i));
+  await fetch(API + 'draft', {method:'POST', body:serialize(d)}); const f = $('#view'); f.dataset.y = S.y; f.src = '/__draft__.html?t=' + Date.now(); }
+
+/* ---------- iframe link ---------- */
+addEventListener('message', e=>{ const d = e.data || {}; if(d.sc === 'select'){ select(d.i, false); } if(d.sc === 'y') S.y = d.y; if(d.sc === 'ready'){ const f = $('#view'); post({sc:'scroll', y:+f.dataset.y || 0}); if(S.sel > -1) post({sc:'select', i:S.sel}); } });
+const post = m => { try { $('#view').contentWindow.postMessage(m, '*'); } catch(e){} };
+function select(i, scroll=true){ S.sel = i; post({sc:'select', i, scroll}); renderPanel(); renderInsp(); if(innerWidth < 1100) $('#insp').classList.toggle('open', i > -1); }
+
+/* ---------- device ---------- */
+function fit(){ const c = $('#canvas').getBoundingClientRect(), f = $('#frame'); const ph = S.dev === 'phone'; const w = ph ? 390 : 1280, h = ph ? 844 : Math.max(720, Math.round(1280 * c.height / c.width));
+  f.classList.toggle('phone', ph); f.style.width = w + 'px'; f.style.height = h + 'px'; const k = Math.min((c.width - 40) / (w + (ph ? 20 : 0)), (c.height - 40) / (h + (ph ? 20 : 0)), 1); f.style.transform = `translate(-50%,-50%) scale(${k})`; }
+$$('.seg button').forEach(b=>b.onclick = ()=>{ S.dev = b.dataset.dev; $$('.seg button').forEach(x=>x.setAttribute('aria-pressed', String(x === b))); fit(); });
+addEventListener('resize', fit);
+
+/* ---------- panels ---------- */
+$$('.rail button').forEach(b=>b.onclick = ()=>{ S.tab = b.dataset.tab; $$('.rail button').forEach(x=>x.setAttribute('aria-selected', String(x === b))); renderPanel(); });
+function renderPanel(){ const p = $('#panel'), tab = S.tab;
+  if(tab === 'layers'){ p.innerHTML = `<h2>${t('layers')}</h2><p class="sub">${t('layersSub')}</p><ul class="layers">${sections().map((s,i)=>{ const {blk, txt} = label(s); return `<li data-i="${i}" aria-selected="${i === S.sel}"><span class="n">${String(i+1).padStart(2,'0')}</span><span class="t">${esc(txt)}</span><span class="tag">${esc(blk)}</span></li>`; }).join('')}</ul>`;
+    $$('.layers li', p).forEach(li=>li.onclick = ()=>select(+li.dataset.i)); return; }
+  if(tab === 'insert'){ if(!S.reg){ p.innerHTML = '<p class="empty">…</p>'; return; } const cats = [...new Set(S.reg.effects.map(e=>e.category))];
+    const q = S.q.toLowerCase(), list = S.reg.effects.filter(e=>(!S.cat || e.category === S.cat) && (!q || (e.title + ' ' + e.name + ' ' + e.block + ' ' + e.category).toLowerCase().includes(q)));
+    const pins = new Set(S.reg.blocks.filter(b=>b.pin).map(b=>b.name));
+    p.innerHTML = `<h2>${t('insert')}</h2><p class="sub">${t('insertSub')}</p><div class="pad"><input class="search" id="q" placeholder="${t('search')}" value="${esc(S.q)}"><div class="chips"><button data-c="" aria-pressed="${!S.cat}">${t('all')}</button>${cats.map(c=>`<button data-c="${esc(c)}" aria-pressed="${S.cat === c}">${esc(c)}</button>`).join('')}</div>
+      ${list.map(e=>`<div class="card"><b>${esc(e.title)}${pins.has(e.block) ? `<span class="tag">${t('pins')}</span>` : ''}</b><small>${esc(e.category)} · ${esc(e.block)}</small><button class="btn s" data-add="${esc(e.name)}">${t('add')}</button></div>`).join('')}</div>`;
+    const qi = $('#q', p); qi.oninput = ()=>{ S.q = qi.value; const pos = qi.selectionStart; renderPanel(); const n = $('#q'); n.focus(); n.setSelectionRange(pos, pos); };
+    $$('.chips button', p).forEach(b=>b.onclick = ()=>{ S.cat = b.dataset.c; renderPanel(); });
+    $$('[data-add]', p).forEach(b=>b.onclick = ()=>insertEffect(b.dataset.add)); return; }
+  if(tab === 'style'){ const cur = S.doc.documentElement.dataset.scTheme || 'genially', cs = customVars();
+    p.innerHTML = `<h2>${t('style')}</h2><p class="sub">${t('styleSub')}</p><div class="pad"><label class="f">${t('presets')}</label><div class="presets">${Object.entries(S.presets).map(([k,v])=>{ const tk = v.tokens || v; const sw = ['--sc-bg','--sc-accent','--sc-accent-2','--sc-accent-3'].map(n=>tk[n] || '#ccc'); return `<button class="preset" data-p="${k}" aria-pressed="${k === cur}"><span class="sw">${sw.map(c=>`<i style="background:${c}"></i>`).join('')}</span><b>${esc(v.label || k)}</b></button>`; }).join('')}</div>
+      <label class="f">${t('colors')}</label><div class="colors">${[['--sc-accent','1'],['--sc-accent-2','2'],['--sc-accent-3','3'],['--sc-bg','bg'],['--sc-ink','ink']].map(([n,l])=>`<label><input type="color" data-v="${n}" value="${cs[n] || presetVal(cur, n)}">${n.replace('--sc-','')}</label>`).join('')}</div>
+      <p><button class="btn s" id="resetC">${t('resetColors')}</button></p>
+      <label class="f">${t('fonts')}</label><label class="f" style="margin-top:0">${t('display')}</label><select class="f" id="fD">${FONT_LIST.map(f=>`<option ${cs['--sc-font-display'] && cs['--sc-font-display'].includes(f) ? 'selected' : ''}>${f}</option>`).join('')}<option value="" ${cs['--sc-font-display'] ? '' : 'selected'}>— preset —</option></select>
+      <label class="f">${t('body')}</label><select class="f" id="fB">${FONT_LIST.map(f=>`<option ${cs['--sc-font-body'] && cs['--sc-font-body'].includes(f) ? 'selected' : ''}>${f}</option>`).join('')}<option value="" ${cs['--sc-font-body'] ? '' : 'selected'}>— preset —</option></select>
+      <label class="f">${t('logo')}</label><button class="btn s" id="logoB">${t('uploadLogo')}</button><input type="file" id="logoF" accept="image/*" class="hide"></div>`;
+    $$('.preset', p).forEach(b=>b.onclick = ()=>commit(()=>setTheme(b.dataset.p)));
+    $$('.colors input', p).forEach(i=>i.onchange = ()=>commit(()=>setVar(i.dataset.v, i.value)));
+    $('#resetC', p).onclick = ()=>commit(()=>{ const st = S.doc.getElementById('sc-brand'); if(st) st.remove(); });
+    $('#fD', p).onchange = e=>commit(()=>setFont('--sc-font-display', e.target.value));
+    $('#fB', p).onchange = e=>commit(()=>setFont('--sc-font-body', e.target.value));
+    $('#logoB', p).onclick = ()=>$('#logoF', p).click(); $('#logoF', p).onchange = async e=>{ const f = e.target.files[0]; if(!f) return; const path = await upload(f); commit(()=>{ let lg = S.doc.querySelector('img.sc-logo'); if(!lg){ lg = S.doc.createElement('img'); lg.className = 'sc-logo'; lg.style.cssText = 'height:40px;width:auto;margin-bottom:16px;display:block'; (sections()[0] || main()).prepend(lg); } lg.src = path; lg.alt = 'Logo'; }); };
+    return; }
+  if(tab === 'assets'){ p.innerHTML = `<h2>${t('assets')}</h2><p class="sub">${t('assetsSub')}</p><div class="pad"><div class="drop" id="drop">${t('drop')} <a href="#" id="pick">${t('choose')}</a><input type="file" id="files" multiple accept="image/*,video/*" class="hide"></div>
+      ${S.assets.length ? `<div class="assets">${S.assets.map(a=>`<button class="asset" data-a="${esc(a)}">${/\.(mp4|webm)$/i.test(a) ? `<video src="${esc(a)}" muted></video>` : `<img src="${esc(a)}" alt="">`}<span>${esc(a.replace('assets/',''))}</span></button>`).join('')}</div>` : `<p class="empty">${t('noAssets')}</p>`}</div>`;
+    const inp = $('#files', p); $('#pick', p).onclick = e=>{ e.preventDefault(); inp.click(); }; inp.onchange = ()=>uploadMany(inp.files);
+    const dz = $('#drop', p); dz.ondragover = e=>{ e.preventDefault(); dz.style.borderColor = 'var(--p)'; }; dz.ondragleave = ()=>dz.style.borderColor = ''; dz.ondrop = e=>{ e.preventDefault(); uploadMany(e.dataTransfer.files); };
+    $$('.asset', p).forEach(b=>b.onclick = ()=>useAsset(b.dataset.a)); return; }
+  if(tab === 'ai'){ p.innerHTML = `<h2>${t('ai')} <span class="crown">♛</span></h2><p class="sub">${t('aiSub')}</p><div class="pad">${[['aiImage','aiImageP'],['aiVoice','aiVoiceP'],['aiMusic','aiMusicP'],['aiVideo','aiVideoP']].map(([a,b])=>`<div class="ai"><h3>✦ ${t(a)}</h3><p>${t(b)}</p><textarea class="f" placeholder="${t('describe')}"></textarea><p style="margin:8px 0 0"><button class="btn p s" data-up="ai">✦ ${t('generate')}</button></p></div>`).join('')}</div>`;
+    $$('[data-up]', p).forEach(b=>b.onclick = ()=>upsell(b.dataset.up)); return; }
+  if(tab === 'analytics'){ p.innerHTML = `<h2>${t('analytics')} <span class="crown">♛</span></h2><p class="sub">${t('analyticsSub')}</p><div class="pad lock">${['mScroll','mDone','mQuiz','mTime','mClicks'].map(m=>`<div class="metric"><b>${t(m)}</b><span>🔒</span></div>`).join('')}<button class="btn p" data-up="track">${t('enableTracking')}</button></div>`;
+    $$('[data-up]', p).forEach(b=>b.onclick = ()=>upsell(b.dataset.up)); return; }
+  if(tab === 'help'){ p.innerHTML = `<h2>${t('help')}</h2><div class="pad">${t('helpBody')}</div>`; }
+}
+
+/* ---------- inspector ---------- */
+const TEXT_SEL = 'h1,h2,h3,h4,p,li,figcaption,small,b,strong,em,span,a,button,blockquote,div,article,mark,label';
+function textNodes(sec){ return [...sec.querySelectorAll(TEXT_SEL)].filter(e=>!e.closest('script') && [...e.childNodes].some(n=>n.nodeType === 3 && n.textContent.trim()) && ![...e.children].some(c=>c.matches('h1,h2,h3,h4,p,li,div,article,section'))); }
+function renderInsp(){ const p = $('#insp'), sec = sections()[S.sel];
+  if(!sec){ p.innerHTML = `<p class="empty">${t('noSel')}</p>`; return; }
+  const {blk} = label(sec), texts = textNodes(sec), imgs = [...sec.querySelectorAll('img,video,[data-src],[data-images]')], jsons = [...sec.querySelectorAll('script[type="application/json"]')], blocks = [...(sec.matches('[data-scrolly]') ? [sec] : []), ...sec.querySelectorAll('[data-scrolly]')];
+  p.innerHTML = `<h2 style="font:800 15px Unbounded;margin:16px 16px 4px">${t('section')} ${S.sel+1}</h2><p class="sub" style="margin:0 16px 8px;color:var(--mut)">${esc(blocks.map(b=>b.dataset.scrolly).join(' · ') || blk)}</p>
+    <div class="pad"><div class="row"><button class="btn s" id="up">↑ ${t('up')}</button><button class="btn s" id="down">↓ ${t('down')}</button><button class="btn s" id="dup">${t('dup')}</button><button class="btn s" id="del" style="color:var(--pink)">${t('del')}</button></div>
+    ${texts.length ? `<label class="f">${t('texts')}</label>${texts.map((e,i)=>`<textarea class="f" data-ti="${i}" rows="${Math.min(5, Math.ceil(e.textContent.length/34))}">${esc(e.textContent.trim())}</textarea>`).join('')}` : ''}
+    ${imgs.length ? `<label class="f">${t('images')}</label>${imgs.map((e,i)=>{ const at = e.hasAttribute('src') ? 'src' : e.hasAttribute('data-src') ? 'data-src' : 'data-images'; return `<input class="f" data-ii="${i}" data-at="${at}" value="${esc(e.getAttribute(at) || '')}"><div class="row" style="margin:4px 0 8px"><button class="btn s" data-pick="${i}">${t('pickAsset')}</button></div>${e.tagName === 'IMG' ? `<input class="f" data-alt="${i}" placeholder="${t('alt')}" value="${esc(e.getAttribute('alt') || '')}" style="margin-bottom:10px">` : ''}`; }).join('')}` : ''}
+    ${jsons.map((j,i)=>`<label class="f">${t('data')}</label><textarea class="f code" data-ji="${i}">${esc(pretty(j.textContent))}</textarea><div class="err" data-je="${i}"></div>`).join('')}
+    ${blocks.map((b,bi)=>{ const at = [...b.attributes].filter(a=>a.name.startsWith('data-') && a.name !== 'data-scrolly' && !/^data-(src|images)$/.test(a.name)); return at.length ? `<label class="f">${t('settings')} · ${esc(b.dataset.scrolly)}</label>${at.map(a=>`<label class="f" style="margin-top:6px;font-weight:500">${esc(a.name)}</label><input class="f" data-bi="${bi}" data-an="${esc(a.name)}" value="${esc(a.value)}">`).join('')}` : ''; }).join('')}
+    </div>`;
+  const all = sections();
+  $('#up', p).onclick = ()=>{ if(S.sel < 1) return; commit(()=>{ all[S.sel].after(all[S.sel-1]); S.sel--; }); };
+  $('#down', p).onclick = ()=>{ if(S.sel >= all.length-1) return; commit(()=>{ all[S.sel+1].after(all[S.sel]); S.sel++; }); };
+  $('#dup', p).onclick = ()=>commit(()=>{ all[S.sel].after(all[S.sel].cloneNode(true)); S.sel++; });
+  $('#del', p).onclick = ()=>{ commit(()=>{ all[S.sel].remove(); S.sel = Math.min(S.sel, sections().length-1); }); toast(t('removed')); };
+  const live = (fn) => { let tm; return e=>{ clearTimeout(tm); tm = setTimeout(()=>{ S.hist.push(serialize(S.doc)); S.fut = []; fn(e.target); S.dirty = true; document.body.classList.add('dirty'); $('#undo').disabled = false; renderPanelIfLayers(); clearTimeout(draftT); draftT = setTimeout(pushDraft, 300); }, 350); }; };
+  $$('[data-ti]', p).forEach(ta=>ta.oninput = live(el=>setText(texts[+el.dataset.ti], el.value)));
+  $$('[data-ii]', p).forEach(inp=>inp.oninput = live(el=>imgs[+el.dataset.ii].setAttribute(el.dataset.at, el.value)));
+  $$('[data-alt]', p).forEach(inp=>inp.oninput = live(el=>imgs[+el.dataset.alt].setAttribute('alt', el.value)));
+  $$('[data-pick]', p).forEach(b=>b.onclick = ()=>{ S.pickFor = {img:imgs[+b.dataset.pick], at:p.querySelector(`[data-ii="${b.dataset.pick}"]`).dataset.at}; S.tab = 'assets'; $$('.rail button').forEach(x=>x.setAttribute('aria-selected', String(x.dataset.tab === 'assets'))); renderPanel(); });
+  $$('[data-ji]', p).forEach(ta=>ta.oninput = ()=>{ const er = p.querySelector(`[data-je="${ta.dataset.ji}"]`); try { JSON.parse(ta.value); er.textContent = ''; live(el=>{ jsons[+el.dataset.ji].textContent = JSON.stringify(JSON.parse(el.value)); })({target:ta}); } catch(e){ er.textContent = t('badJson') + e.message; } });
+  $$('[data-an]', p).forEach(inp=>inp.oninput = live(el=>blocks[+el.dataset.bi].setAttribute(el.dataset.an, el.value)));
+}
+function renderPanelIfLayers(){ if(S.tab === 'layers') renderPanel(); }
+function setText(el, v){ const nodes = [...el.childNodes].filter(n=>n.nodeType === 3 && n.textContent.trim()); if(nodes.length === 1 && el.children.length){ nodes[0].textContent = v; } else if(!el.children.length){ el.textContent = v; } else { nodes.forEach((n,i)=>n.textContent = i ? '' : v); } }
+const pretty = s => { try { return JSON.stringify(JSON.parse(s), null, 1); } catch(e){ return s; } };
+
+/* ---------- insert ---------- */
+async function insertEffect(name){ const e = S.reg.effects.find(x=>x.name === name); const html = await (await fetch(API + 'effect/' + encodeURIComponent(name))).text();
+  commit(()=>{ const tmp = S.doc.createElement('template'); tmp.innerHTML = BLEED.has(e.block) ? html : `<section class="sc-section sc-wrap">${html}</section>`;
+    const nodes = [...tmp.content.childNodes].filter(n=>n.nodeType === 1 || (n.nodeType === 8)); const ref = sections()[S.sel]; const frag = S.doc.createDocumentFragment(); nodes.forEach(n=>frag.appendChild(S.doc.importNode(n, true)));
+    const count = [...frag.childNodes].filter(n=>n.nodeType === 1).length; if(ref) ref.after(frag); else main().appendChild(frag); S.sel = (ref ? S.sel : sections().length - count - 1) + 1; });
+  toast(t('inserted') + ': ' + e.title); post({sc:'select', i:S.sel, scroll:true}); }
+
+/* ---------- style ---------- */
+const presetVal = (k, n) => { const v = S.presets[k] || {}; const tk = v.tokens || v; return /^#/.test(tk[n] || '') ? tk[n] : '#6C29FF'; };
+function brandStyle(){ let st = S.doc.getElementById('sc-brand'); if(!st){ st = S.doc.createElement('style'); st.id = 'sc-brand'; S.doc.head.appendChild(st); } return st; }
+function customVars(){ const st = S.doc.getElementById('sc-brand'); const o = {}; if(st) for(const m of st.textContent.matchAll(/(--sc-[\w-]+)\s*:\s*([^;]+);/g)) o[m[1]] = m[2].trim(); return o; }
+function writeVars(o){ const st = brandStyle(); st.textContent = `:root[data-sc-theme]{${Object.entries(o).map(([k,v])=>`${k}:${v};`).join('')}}`; if(!Object.keys(o).length) st.remove(); }
+function setVar(n, v){ const o = customVars(); o[n] = v; if(n === '--sc-accent') o['--sc-on-accent'] = onColor(v); if(n === '--sc-accent-2') o['--sc-on-accent-2'] = onColor(v); writeVars(o); }
+function onColor(hex){ const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255; return (0.299*r + 0.587*g + 0.114*b)/255 > .6 ? '#121212' : '#FFFFFF'; }
+function setFont(n, fam){ const o = customVars(); if(fam) o[n] = `'${fam}', system-ui, sans-serif`; else delete o[n]; writeVars(o); let lk = S.doc.getElementById('sc-brand-fonts'); const fams = [o['--sc-font-display'], o['--sc-font-body']].filter(Boolean).map(f=>f.match(/'([^']+)'/)[1]);
+  if(!fams.length){ if(lk) lk.remove(); return; } if(!lk){ lk = S.doc.createElement('link'); lk.id = 'sc-brand-fonts'; lk.rel = 'stylesheet'; S.doc.head.appendChild(lk); } lk.href = 'https://fonts.googleapis.com/css2?' + [...new Set(fams)].map(f=>'family=' + f.replace(/ /g,'+') + ':wght@400..800').join('&') + '&display=swap'; }
+function setTheme(k){ S.doc.documentElement.dataset.scTheme = k; const lk = S.doc.querySelector('link[data-sc-fonts]'); if(lk && S.fonts[k]) lk.href = S.fonts[k]; }
+
+/* ---------- assets ---------- */
+async function upload(f){ const r = await fetch(API + 'upload?name=' + encodeURIComponent(f.name), {method:'POST', body:f}); const j = await r.json(); await loadAssets(); return j.path; }
+async function uploadMany(fl){ for(const f of fl) await upload(f); toast(t('uploaded')); renderPanel(); }
+async function loadAssets(){ try { S.assets = await (await fetch(API + 'assets')).json(); } catch(e){ S.assets = []; } }
+function useAsset(a){ if(S.pickFor){ const {img, at} = S.pickFor; S.pickFor = null; commit(()=>img.setAttribute(at, a)); S.tab = 'layers'; $$('.rail button').forEach(x=>x.setAttribute('aria-selected', String(x.dataset.tab === 'layers'))); renderPanel(); return; }
+  const sec = sections()[S.sel]; if(!sec){ navigator.clipboard && navigator.clipboard.writeText(a); toast(a); return; } const img = sec.querySelector('img'); if(img) commit(()=>img.setAttribute('src', a)); else toast(a); }
+
+/* ---------- upsell (Genially paid plans) ---------- */
+function upsell(kind){ const m = {ai:'ai', mark:'mark', track:'track', publish:'pub'}[kind];
+  $('#mBadge').textContent = t('paid'); $('#mTitle').textContent = t(`up_${m}_t`); $('#mText').textContent = t(`up_${m}_x`); $('#mList').innerHTML = t(`up_${m}_l`).map(x=>`<li>${esc(x)}</li>`).join('');
+  $('#mNote').textContent = t('soon'); $('#mClose').textContent = t('close'); $('#mCta').textContent = t('seePlans'); $('#modal').classList.add('on'); $('#mCta').focus(); }
+$('#mClose').onclick = ()=>$('#modal').classList.remove('on'); $('#modal').onclick = e=>{ if(e.target.id === 'modal') $('#modal').classList.remove('on'); };
+$('#mark').onclick = ()=>upsell('mark'); $('#publish').onclick = ()=>upsell('publish');
+
+/* ---------- top bar ---------- */
+$('#title').onchange = e=>commit(()=>{ S.doc.title = e.target.value; });
+$('#save').onclick = save;
+async function save(){ const r = await fetch(API + 'save', {method:'POST', body:serialize(S.doc)}); if(r.ok){ S.dirty = false; document.body.classList.remove('dirty'); toast(t('saved')); } else toast(await r.text()); }
+$('#preview').onclick = ()=>window.open('/__draft__.html?plain=1', '_blank');
+$('#undo').onclick = ()=>{ if(!S.hist.length) return; S.fut.push(serialize(S.doc)); load(S.hist.pop()); S.dirty = true; refresh(); };
+$('#redo').onclick = ()=>{ if(!S.fut.length) return; S.hist.push(serialize(S.doc)); load(S.fut.pop()); S.dirty = true; refresh(); };
+addEventListener('keydown', e=>{ const mod = e.metaKey || e.ctrlKey; if(mod && e.key.toLowerCase() === 's'){ e.preventDefault(); save(); } if(mod && e.key.toLowerCase() === 'z' && !/TEXTAREA|INPUT/.test(document.activeElement.tagName)){ e.preventDefault(); (e.shiftKey ? $('#redo') : $('#undo')).click(); } if(e.key === 'Escape') $('#modal').classList.remove('on'); });
+addEventListener('beforeunload', e=>{ if(S.dirty){ e.preventDefault(); e.returnValue = t('unsaved'); } });
+let toastT; function toast(m){ const el = $('#toast'); el.textContent = m; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(()=>el.classList.remove('on'), 2200); }
+
+/* ---------- boot ---------- */
+(async ()=>{ const [src, reg] = await Promise.all([fetch(API + 'source').then(r=>r.text()), fetch(API + 'registry').then(r=>r.json())]);
+  load(src); S.reg = reg; S.presets = reg.presets || {}; S.fonts = reg.fonts || {}; await loadAssets(); S.sel = -1; refresh(); fit();
+  if(new URLSearchParams(location.search).get('tab')) $(`.rail [data-tab="${new URLSearchParams(location.search).get('tab')}"]`)?.click(); })();
+</script>
+</body>
+</html>

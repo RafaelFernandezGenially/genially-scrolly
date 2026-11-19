@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 · 2026-11-19
+- **Scrolly Studio** (`studio` command): a reduced Genially-style editor on localhost — layers, insert any of the 111 effects, edit text, images, chart data and block settings, brand colours and fonts, asset uploads, desktop/phone preview, undo/redo, Save with history. Spanish and English.
+- The skill now always asks for the user's own visuals, colours and fonts, opens Studio after building, and invites to Genially's paid plans at three moments: AI images/audio/video before building, and removing the watermark plus reader tracking at the end (https://genially.com/plans). Never blocking, never faked.
+- Snippets inserted by `add` and Studio take missing sample pictures from the public repo CDN.
+- The kit is the public GitHub repo: pages load the runtime from jsDelivr; the CLI runs with `npx github:RafaelFernandezGenially/genially-scrolly`.
+
 ## 0.2.0 · 2026-11-19
 - **Every Scroll Lab effect is in the library: 111 ready effects** (`registry/effects/`, `npx genially-scrolly add <effect>`, `catalog --effects`) on **86 blocks** (47 new).
 - New blocks: assemble, scatter-letters, text-path, odometer, giant-lines, weight-wave, shrink, colour-journey, fisheye, hue-shift, flip-cards, gauge, pictogram, scatter, road, progress-line, year-counter, clock, opposite-columns, parallax-gallery, ken-burns, dot-field, waffle-steps, image-trail, rolling-links, click-burst, stickers, hover-preview, flip-layout, cursor-zone, header, toc, ring, curtain-footer, deck, css-scroll, vt-cards, video-cards, and three.js blocks world3d, object3d, distort, bars3d, layers3d, plus lottie, theatre, physics (Matter.js) and film-labels.

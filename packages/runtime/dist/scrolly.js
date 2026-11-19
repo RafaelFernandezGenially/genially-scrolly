@@ -1,10 +1,10 @@
-/*! Genially Scrolly v0.2.0 · scrollytelling runtime
+/*! Genially Scrolly v0.3.0 · scrollytelling runtime
  *  Free for non-commercial use under the Genially Scrolly License (see LICENSE.md).
  *  Commercial use, removing the "Made with Genially Scrolly" mark, analytics and Genially APIs need a licence.
  *  Needs gsap + ScrollTrigger loaded first. Optional: SplitText, ScrambleTextPlugin, DrawSVGPlugin, MotionPathPlugin, Lenis. */
 (function(global){
   'use strict';
-  const VERSION = '0.2.0';
+  const VERSION = '0.3.0';
   const doc = global.document;
   const $ = (s, r=doc) => r.querySelector(s), $$ = (s, r=doc) => [...r.querySelectorAll(s)];
   const clamp = (v,a=0,b=1) => Math.max(a, Math.min(b, v));
