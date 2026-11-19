@@ -1,0 +1,23 @@
+# BRIEF
+
+- **Title (working):**
+- **Goal (user's words):**
+- **Success looks like:** (what the reader knows, feels or does after the last beat)
+- **Audience:**
+- **Tone:**
+- **Route:** story | course | report | launch | custom
+- **Style preset / brand:**  (preset name, or brand colours + fonts, or reference image/URL)
+- **Feel / motion intensity:** calm | lively (medium) | spectacular (hero) | playful
+- **Must-have moments:** (3D · data · film scrub · moving type · activities · journey · toys)
+- **Avoid:** (anything the user does not want)
+- **Length and device:** short/phone · medium/both · long/desktop → target beats:
+- **Language:**
+- **Content available:** text · data · images · video · logo · nothing yet
+- **Data sources:** (name each source; mark which charts are real and which are sample)
+- **Learning objectives (course only):**
+- **Key finding (report only):**
+- **Call to action (last beat):**
+- **Commercial use:** no | yes | unknown  → licence note needed: yes/no
+- **Pro features requested:** none | no mark | analytics | AI images | publish to Genially  (all need a licence + the Genially connection, not live in this release)
+- **Assumptions made:**
+- **Out of scope:**
