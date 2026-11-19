@@ -1,0 +1,39 @@
+{
+  "name": "genially-scrolly",
+  "version": "0.2.0",
+  "description": "CLI for Genially Scrolly: init, add, theme, catalog, lint, preview, verify, build.",
+  "type": "module",
+  "bin": {
+    "genially-scrolly": "bin/scrolly.mjs",
+    "scrolly": "bin/scrolly.mjs"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "engines": {
+    "node": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
+  },
+  "files": [
+    "bin",
+    "kit",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "keywords": [
+    "scrollytelling",
+    "gsap",
+    "scrolltrigger",
+    "genially",
+    "storytelling",
+    "data-visualization",
+    "agent-skills"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaelFernandezGenially/genially-scrolly.git"
+  },
+  "homepage": "https://github.com/RafaelFernandezGenially/genially-scrolly#readme"
+}
