@@ -1,0 +1,9 @@
+{
+  "name": "geniallyscrolly",
+  "version": "0.2.0",
+  "description": "Make scrollytelling pages from a prompt: stories, courses, reports and launches. Type /geniallyscrolly.",
+  "author": {"name": "Genially"},
+  "homepage": "https://genially.com/scrolly",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "skills": ["./skills/geniallyscrolly", "./skills/geniallyscrolly-cli", "./skills/geniallyscrolly-blocks"]
+}

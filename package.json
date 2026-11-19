@@ -1,0 +1,21 @@
+{
+  "name": "genially-scrolly-monorepo",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Scrollytelling from a prompt: runtime, CLI, templates and agent skills.",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs && node scripts/registry.mjs && node scripts/docs.mjs && node scripts/gallery.mjs",
+    "verify": "node packages/cli/bin/scrolly.mjs verify examples/kitchen-sink",
+    "lint:example": "node packages/cli/bin/scrolly.mjs lint examples/kitchen-sink/index.html"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

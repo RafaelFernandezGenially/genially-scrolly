@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" data-sc-theme="genially">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Genially Scrolly</title>
+<meta name="description" content="Scrollytelling from a prompt: a runtime, a CLI, templates and the /geniallyscrolly agent skill.">
+<meta name="generator" content="Genially Scrolly 0.2.0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300..900&family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" data-sc-fonts>
+<link rel="stylesheet" href="packages/runtime/dist/scrolly.css">
+<link rel="stylesheet" href="styles/presets.css">
+<style>
+  .top{position:fixed;z-index:60;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px var(--sc-gutter);background:color-mix(in srgb,var(--sc-bg) 88%,transparent);backdrop-filter:blur(8px)}
+  .top b{font:800 15px var(--sc-font-display);letter-spacing:-.02em}.top b i{color:var(--sc-accent-2);font-style:normal}
+  .top nav{display:flex;gap:4px;flex-wrap:wrap}.top nav a{color:var(--sc-ink);text-decoration:none;font:600 13px var(--sc-font-body);padding:6px 10px;border-radius:999px}.top nav a:hover{background:var(--sc-tint)}
+  @media (max-width:720px){.top nav a:not(.keep){display:none}}
+  .hero{min-height:100svh;display:grid;align-content:center;gap:18px;padding-top:80px}
+  .hero .sc-display{font-size:clamp(48px,11vw,170px)}
+  .code{background:#0A0A0A;color:#E7E3FF;border-radius:16px;padding:16px 18px;font:400 13.5px/1.6 var(--sc-font-mono);overflow-x:auto;white-space:pre;border:1px solid var(--sc-line)}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+  .card{background:var(--sc-surface);border-radius:var(--sc-radius);padding:20px;border:1px solid var(--sc-line)}
+  .card h3{margin:0 0 6px;font:800 20px/1.15 var(--sc-font-display);letter-spacing:-.02em}
+  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:10px;counter-reset:f}
+  .flow div{background:var(--sc-surface);border-radius:18px;padding:16px;counter-increment:f}
+  .flow div::before{content:counter(f);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--sc-accent);color:var(--sc-on-accent);font:800 14px var(--sc-font-display);margin-bottom:8px}
+  .flow b{display:block;font:700 15px var(--sc-font-body)}.flow span{font-size:14px;color:var(--sc-muted)}
+  .presets{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:10px}
+  .preset{border:2px solid transparent;border-radius:18px;padding:14px;text-align:left;cursor:pointer;font:inherit}
+  .preset[aria-pressed="true"]{border-color:var(--sc-accent-2)}
+  .preset b{display:block;font-size:20px;margin-bottom:6px}.preset small{font-size:12px;opacity:.75}
+  .preset .sw{display:flex;gap:4px;margin-top:10px}.preset .sw i{width:20px;height:20px;border-radius:50%}
+  .filters{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .filters button,.filters input{min-height:36px;border:0;border-radius:999px;padding:0 14px;font:600 13px var(--sc-font-body);background:var(--sc-tint);color:var(--sc-ink);cursor:pointer}
+  .filters input{cursor:text;min-width:200px}
+  .filters button[aria-pressed="true"]{background:var(--sc-accent);color:var(--sc-on-accent)}
+  .blocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:12px}
+  .blk{background:var(--sc-surface);border-radius:18px;padding:16px;display:grid;gap:6px;align-content:start;border:1px solid var(--sc-line)}
+  .blk code{font:600 12px var(--sc-font-mono);color:var(--sc-accent-2)}
+  .blk h4{margin:0;font:700 16px/1.25 var(--sc-font-body)}.blk p{margin:0;font-size:14px;color:var(--sc-muted)}
+  .blk .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .blk .row button,.blk .row a{min-height:30px;border:0;border-radius:999px;padding:0 10px;font:600 12px var(--sc-font-body);background:var(--sc-tint);color:var(--sc-ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+  table.lic{width:100%;min-width:620px;border-collapse:collapse;font-size:15px}
+  table.lic th,table.lic td{padding:10px 8px;border-bottom:1px solid var(--sc-line);text-align:center}
+  table.lic th:first-child,table.lic td:first-child{text-align:left}
+  table.lic thead th{font:700 14px var(--sc-font-display)}
+  .note{border-left:3px solid var(--sc-accent-2);padding:8px 0 8px 14px;color:var(--sc-muted)}
+  .scroller{overflow-x:auto}
+</style>
+</head>
+<body>
+<header class="top"><b>genially<i>.</i>scrolly</b><nav><a href="#start" class="keep">Start</a><a href="#how">How</a><a href="#blocks" class="keep">Blocks</a><a href="#styles">Styles</a><a href="#licence" class="keep">Licence</a></nav></header>
+<main>
+  <section class="hero sc-wrap" data-chapter="GENIALLY SCROLLY">
+    <p class="sc-kicker" data-scrolly="scramble">OPEN SOURCE · FOR PEOPLE AND AGENTS</p>
+    <h1 class="sc-display" data-scrolly="reveal" data-effect="clip">Scroll<span style="color:var(--sc-accent-2)">y</span>.</h1>
+    <p class="sc-lede">Scrollytelling from a prompt. Install one skill, type <b>/geniallyscrolly</b>, describe your story, course, report or launch, and it guides you from idea to a published page in your style.</p>
+    <p data-scrolly="magnetic"><a class="sc-btn" href="#start">Get started</a> <a class="sc-btn ghost" href="examples/kitchen-sink/index.html">See every block live</a> <a class="sc-btn ghost" href="https://claude.ai/artifact/5WUUjtSuaiCftcwstWEFsy" target="_blank" rel="noopener">Scroll Lab · 111 effects</a></p>
+  </section>
+
+  <section class="sc-section sc-wrap" data-chapter="THE IDEA">
+    <p class="sc-h2" data-scrolly="words">Every effect is <em style="color:var(--sc-accent-2)">one attribute</em> on plain HTML. The skill writes the brief, the storyboard and the page, then <em style="color:var(--sc-accent-2)">checks it on a phone</em> before you see it.</p>
+  </section>
+
+  <section class="sc-section sc-wrap" id="start" data-chapter="START">
+    <h2 class="sc-h2">Start in a minute</h2>
+    <div class="grid2">
+      <div class="card"><h3>With an agent</h3><p>Claude Code plugin, or any agent that reads skills.</p>
+<pre class="code">claude plugin marketplace add RafaelFernandezGenially/genially-scrolly
+claude plugin install geniallyscrolly@genially-scrolly
+# then
+/geniallyscrolly a scrollytelling about our school's
+history, warm and friendly, with a quiz at the end</pre>
+<pre class="code" style="margin-top:8px">npx skills add RafaelFernandezGenially/genially-scrolly --all</pre></div>
+      <div class="card"><h3>By hand</h3><p>The CLI scaffolds, checks and builds.</p>
+<pre class="code">npx genially-scrolly init my-story \
+  --template story --theme editorial
+cd my-story
+npx genially-scrolly preview
+npx genially-scrolly lint
+npx genially-scrolly verify   # desktop + phone
+npx genially-scrolly build</pre></div>
+    </div>
+  </section>
+
+  <section class="sc-section sc-wrap" id="how" data-chapter="HOW IT WORKS">
+    <h2 class="sc-h2">How the skill guides you</h2>
+    <div data-scrolly="steps">
+      <div class="sc-graphic">
+        <div data-show="1" style="display:grid;place-items:center;padding:24px;background:var(--sc-surface-2)"><pre class="code" style="width:100%">? What is it for?   Tell a story
+? Look and feel?    Editorial
+? What do you have? Text, numbers
+? Commercial use?   No
+
+→ BRIEF.md written</pre></div>
+        <div data-show="2" style="display:grid;place-items:center;padding:24px;background:var(--sc-surface-2)"><pre class="code" style="width:100%">| # | Message            | Block   |
+|---|--------------------|---------|
+| 1 | The river is old   | reveal  |
+| 2 | How floods happen  | steps   |
+| 3 | 40 years of levels | chart   |
+| 4 | The map            | camera  |
+→ STORYBOARD.md</pre></div>
+        <div data-show="3" style="display:grid;place-items:center;padding:24px;background:var(--sc-surface-2)"><pre class="code" style="width:100%">&lt;div data-scrolly="steps"&gt;…
+&lt;div data-scrolly="chart"&gt;
+  {"type":"line","source":"real",…}
+&lt;section data-scrolly="camera"&gt;…</pre></div>
+        <div data-show="4" style="display:grid;place-items:center;padding:24px;background:var(--sc-surface-2)"><pre class="code" style="width:100%">$ npx genially-scrolly lint
+· 3 pinned blocks · 0 errors
+$ npx genially-scrolly verify
+desktop 1280×800 ✓  phone 390×844 ✓
+calm mode ✓  mark present ✓</pre></div>
+        <div data-show="5" style="display:grid;place-items:center;padding:24px;background:var(--sc-accent);color:var(--sc-on-accent)"><p class="sc-h2" style="text-align:center">Published.</p></div>
+      </div>
+      <div class="sc-steps">
+        <div data-step="1"><p><b>Interview, once.</b> Up to four questions: goal, route, style, content. The answers become BRIEF.md.</p></div>
+        <div data-step="2"><p><b>Storyboard.</b> One idea per beat, a block per beat, a pin budget and real-or-sample data labels.</p></div>
+        <div data-step="3"><p><b>Build.</b> A template in your style, filled with your copy. Every effect is a data-scrolly block.</p></div>
+        <div data-step="4"><p><b>Check.</b> Lint for structure, accessibility and licence rules; screenshots on desktop and phone; calm mode.</p></div>
+        <div data-step="5"><p><b>Ship.</b> One Artifact inside claude.ai, or a static folder for any host.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sc-section sc-wrap" data-chapter="ROUTES">
+    <h2 class="sc-h2">Four routes, one kit</h2>
+    <div data-scrolly="stack">
+      <article style="--c:var(--sc-accent)"><p class="sc-kicker" style="color:inherit">story</p><h3 class="sc-h2">Brand stories, explainers, histories</h3></article>
+      <article style="--c:var(--sc-accent-2);--fg:var(--sc-on-accent-2)"><p class="sc-kicker" style="color:inherit">course</p><h3 class="sc-h2">Onboarding, training and lessons</h3></article>
+      <article style="--c:var(--sc-accent-3);--fg:#fff"><p class="sc-kicker" style="color:inherit">report</p><h3 class="sc-h2">Data stories and reports</h3></article>
+      <article style="--c:var(--sc-accent-4);--fg:#121212"><p class="sc-kicker" style="color:inherit">launch</p><h3 class="sc-h2">Products and features</h3></article>
+    </div>
+  </section>
+
+  <section class="sc-section sc-wrap" id="blocks" data-chapter="BLOCKS">
+    <h2 class="sc-h2"><span id="nBlocks">86</span> blocks</h2>
+    <p class="sc-lede">And <span id="nRef">111</span> ready effects — every one in the Scroll Lab, from word reveals to 3D worlds, D3 globes and physics. <a href="examples/gallery/index.html">See all 111 live →</a> Copy a snippet, paste it in your page.</p>
+    <div class="filters" id="cats"><input type="search" id="q" placeholder="Search blocks" aria-label="Search blocks"></div>
+    <div class="blocks" id="blockList" aria-live="polite"></div>
+  </section>
+
+  <section class="sc-section sc-wrap" id="styles" data-chapter="STYLES">
+    <h2 class="sc-h2">Eight styles, or yours</h2>
+    <p class="sc-lede">Click one: this page switches to it. Or give the skill your brand or a reference image and it derives the tokens.</p>
+    <div class="presets" id="presets"></div>
+  </section>
+
+  <section class="sc-section sc-wrap" data-chapter="NUMBERS">
+    <div data-scrolly="kpi"><div><small>Runtime blocks</small><b data-value="86"></b><span>one attribute each</span></div><div><small>Ready effects</small><b data-value="111"></b><span>the whole Scroll Lab</span></div><div><small>Style presets</small><b data-value="8"></b><span>tokens + fonts</span></div><div><small>Runtime, gzipped</small><b data-value="46" data-suffix=" KB"></b><span>heavy libraries load on demand</span></div></div>
+  </section>
+
+  <section class="sc-section sc-wrap" id="licence" data-chapter="LICENCE">
+    <h2 class="sc-h2">Free to learn and share. Licensed for business.</h2>
+    <p class="sc-lede">Genially Scrolly is free for non-commercial use, with the “Made with Genially Scrolly” mark on every page. Commercial use needs a licence, in the spirit of Remotion’s model.</p>
+    <div class="scroller"><table class="lic">
+      <thead><tr><th></th><th>Free</th><th>Creator</th><th>Team</th><th>Enterprise</th></tr></thead>
+      <tbody>
+        <tr><td>Non-commercial use · all blocks, templates, CLI, skills</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+        <tr><td>Commercial use</td><td>—</td><td>1 person</td><td>organisation</td><td>organisation</td></tr>
+        <tr><td>Remove the mark</td><td>—</td><td>✓</td><td>✓</td><td>✓</td></tr>
+        <tr><td>Genially analytics (scroll depth, completions, quiz results)</td><td>—</td><td>✓</td><td>✓</td><td>✓</td></tr>
+        <tr><td>Genially APIs (AI images in your style, assets, publish to Genially)</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
+        <tr><td>LMS / xAPI, SSO, custom terms</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+      </tbody></table></div>
+    <p class="note">The Genially licensing and Pro services are not live in this release. The runtime already has the hooks; every key resolves to “not connected” until Genially opens the service.</p>
+  </section>
+
+  <footer class="sc-section sc-wrap" data-chapter="GO">
+    <h2 class="sc-display" data-scrolly="reveal">Your turn.</h2>
+    <p data-scrolly="magnetic" style="margin-top:20px"><a class="sc-btn" href="#start">Install the skill</a> <a class="sc-btn ghost" href="README.md">README</a> <a class="sc-btn ghost" href="LICENSE.md">Licence</a></p>
+  </footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
+<script src="packages/runtime/dist/scrolly.js"></script>
+<script>
+(async function(){
+  const $ = s => document.querySelector(s), esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  // style presets: switch this page live
+  try {
+    const [P, F] = await Promise.all([fetch('styles/presets.json').then(r=>r.json()), fetch('styles/fonts.json').then(r=>r.json())]);
+    const box = $('#presets');
+    box.innerHTML = Object.entries(P).map(([k,v])=>`<button class="preset" data-k="${k}" aria-pressed="${k === 'genially'}" style="background:${v.tokens['--sc-bg']};color:${v.tokens['--sc-ink']};font-family:${esc(v.tokens['--sc-font-body'])}"><b style="font-family:${esc(v.tokens['--sc-font-display'])}">${v.label}</b><small>${v.mood.join(' · ')}</small><span class="sw">${['--sc-accent','--sc-accent-2','--sc-accent-3','--sc-accent-4'].map(t=>`<i style="background:${v.tokens[t]}"></i>`).join('')}</span></button>`).join('');
+    const loaded = new Set(['genially']);
+    box.addEventListener('click', e=>{ const b = e.target.closest('.preset'); if(!b) return; const k = b.dataset.k; document.documentElement.dataset.scTheme = k;
+      if(!loaded.has(k)){ loaded.add(k); const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = F[k]; document.head.appendChild(l); }
+      box.querySelectorAll('.preset').forEach(x=>x.setAttribute('aria-pressed', String(x === b))); });
+    // preload preset fonts for the swatches
+    Object.entries(F).forEach(([k,u])=>{ if(k === 'genially') return; const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = u; document.head.appendChild(l); loaded.add(k); });
+  } catch(e){}
+  // block catalogue from the registry
+  try {
+    const R = await fetch('registry/registry.json').then(r=>r.json());
+    $('#nBlocks').textContent = R.blocks.length; $('#nRef').textContent = R.effects.length;
+    const cats = [...new Set(R.blocks.map(b=>b.category))]; let cat = 'All';
+    $('#cats').insertAdjacentHTML('beforeend', ['All', ...cats].map(c=>`<button data-c="${esc(c)}" aria-pressed="${c === 'All'}">${esc(c)}</button>`).join(''));
+    const render = () => { const q = $('#q').value.toLowerCase();
+      const list = R.blocks.filter(b=>(cat === 'All' || b.category === cat) && (!q || (b.name + b.title + b.description).toLowerCase().includes(q)));
+      $('#blockList').innerHTML = list.map(b=>`<article class="blk"><code>data-scrolly="${b.name}"</code><h4>${esc(b.title)}</h4><p>${esc(b.description)}</p>${b.ld ? `<p><b style="color:var(--sc-ink)">L&amp;D:</b> ${esc(b.ld)}</p>` : ''}<div class="row">${b.pin ? '<span class="sc-chip sample">pins</span>' : ''}<button data-copy="${b.name}">Copy snippet</button>${b.demoInLab && b.demoInLab[0] ? `<a href="${b.demoInLab[0]}" target="_blank" rel="noopener">Demo in the Lab</a>` : ''}</div></article>`).join('') || '<p>No block matches.</p>'; };
+    $('#cats').addEventListener('click', e=>{ const b = e.target.closest('[data-c]'); if(!b) return; cat = b.dataset.c; $('#cats').querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed', String(x === b))); render(); });
+    $('#q').addEventListener('input', render);
+    $('#blockList').addEventListener('click', e=>{ const b = e.target.closest('[data-copy]'); if(!b) return; const blk = R.blocks.find(x=>x.name === b.dataset.copy);
+      (navigator.clipboard ? navigator.clipboard.writeText(blk.snippet) : Promise.reject()).then(()=>{ b.textContent = 'Copied'; }, ()=>{ b.textContent = 'Select it in the README'; }); setTimeout(()=>b.textContent = 'Copy snippet', 1500); });
+    render();
+  } catch(e){ $('#blockList').textContent = 'The catalogue could not load.'; }
+  Scrolly.init({chapters:true, header:56});
+})();
+</script>
+</body>
+</html>

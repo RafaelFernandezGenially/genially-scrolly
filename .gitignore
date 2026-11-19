@@ -1,0 +1,8 @@
+node_modules/
+dist-npm/
+packages/cli/kit/
+packages/cli/README.md
+packages/*/LICENSE.md
+.scrolly/
+*.log
+.DS_Store

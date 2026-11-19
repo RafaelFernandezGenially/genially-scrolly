@@ -1,0 +1,5 @@
+{
+  "name": "genially-scrolly",
+  "owner": {"name": "Genially"},
+  "plugins": [{"name": "geniallyscrolly", "source": "./", "description": "Scrollytelling from a prompt, guided end to end by /geniallyscrolly."}]
+}
