@@ -1,0 +1,33 @@
+{
+  "name": "@genially/scrolly",
+  "version": "0.2.0",
+  "description": "Genially Scrolly runtime: data-scrolly blocks on GSAP ScrollTrigger.",
+  "main": "dist/scrolly.js",
+  "style": "dist/scrolly.css",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "license": "SEE LICENSE IN LICENSE.md",
+  "peerDependencies": {
+    "gsap": "^3.13.0"
+  },
+  "unpkg": "dist/scrolly.min.js",
+  "jsdelivr": "dist/scrolly.min.js",
+  "keywords": [
+    "scrollytelling",
+    "gsap",
+    "scrolltrigger",
+    "genially",
+    "scroll-animation",
+    "data-visualization",
+    "threejs",
+    "d3"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaelFernandezGenially/genially-scrolly.git",
+    "directory": "packages/runtime"
+  }
+}
