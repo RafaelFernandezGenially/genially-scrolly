@@ -1,0 +1,1 @@
+{"name": "launch", "label": "Product launch", "description": "A launch page: particle opener, portal into what is new, a feature stack, sideways details and a magnetic call to action. Add a film with video-scrub and a before/after with compare when you have the assets.", "blocks": ["particles", "reveal", "portal", "stack", "horizontal", "magnetic"], "plugins": []}

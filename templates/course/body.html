@@ -1,0 +1,45 @@
+<main>
+  <header class="sc-section sc-wrap" data-chapter="00 · START" style="min-height:80svh;display:grid;align-content:center">
+    <p class="sc-kicker">{{KICKER}} · about 15 minutes</p>
+    <h1 class="sc-display" data-scrolly="reveal">{{TITLE}}</h1>
+    <p class="sc-lede">{{SUBTITLE}}</p>
+  </header>
+  <section class="sc-wrap"><div data-scrolly="progress" data-title="Your progress"></div></section>
+
+  <section class="sc-section sc-wrap" data-chapter="01 · WHY">
+    <p class="sc-kicker">By the end you will be able to</p>
+    <p class="sc-h2" data-scrolly="words">{{BIG_STATEMENT}}</p>
+    <p class="sc-lede" data-scrolly="glossary" data-title="Glossary" data-goal="2">Hover or tap the underlined words: a <button class="sc-term" data-def="Replace with the definition of your first key term.">key term</button> and <button class="sc-term" data-def="Replace with the definition of your second key term.">another term</button>.</p>
+  </section>
+
+  <section class="sc-section sc-wrap" data-chapter="02 · LEARN">
+    <h2 class="sc-h2">Step by step</h2>
+    <div data-scrolly="steps">
+      <div class="sc-graphic">
+        <div data-show="1" style="background:var(--sc-surface-2);display:grid;place-items:center;font:800 clamp(28px,5vw,64px) var(--sc-font-display)">Diagram 1</div>
+        <div data-show="2" style="background:var(--sc-accent);color:var(--sc-on-accent);display:grid;place-items:center;font:800 clamp(28px,5vw,64px) var(--sc-font-display)">Diagram 2</div>
+        <div data-show="3" style="background:var(--sc-accent-2);color:var(--sc-on-accent-2);display:grid;place-items:center;font:800 clamp(28px,5vw,64px) var(--sc-font-display)">Diagram 3</div>
+      </div>
+      <div class="sc-steps">
+        <div data-step="1"><p><b>First,</b> the idea in one sentence.</p></div>
+        <div data-step="2"><p><b>Then,</b> what changes and why it matters.</p></div>
+        <div data-step="3"><p><b>Finally,</b> how to apply it tomorrow.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sc-section sc-wrap" data-chapter="03 · CHECK" style="display:grid;gap:16px">
+    <div data-scrolly="quiz" data-title="Knowledge check"><script type="application/json">[{"q":"Replace with your first question","options":["A wrong but plausible answer","The right answer","Another plausible answer"],"answer":1,"why":"Explain why, so a wrong answer still teaches."},{"q":"Second question","options":["Right","Wrong"],"answer":0,"why":"One sentence of explanation."}]</script></div>
+    <div data-scrolly="scenario" data-title="Practice scenario"><script type="application/json">{"start":"a","who":"Your colleague","nodes":{"a":{"say":"Describe a realistic situation in one or two sentences.","choices":[["A good first move","b",1],["A tempting mistake","bad",-1]]},"b":{"say":"What happens after the good move.","choices":[["The best follow-up","good",1],["A half measure","mid",0]]},"good":{"end":"Great outcome","text":"Say what made it work."},"mid":{"end":"Partial fix","text":"Say what is still missing."},"bad":{"end":"Missed the cause","text":"Say what to try first."}}}</script></div>
+  </section>
+
+  <section class="sc-section sc-wrap" data-chapter="04 · PRACTISE" style="display:grid;gap:16px">
+    <div data-scrolly="flashcards" data-title="Flashcards"><script type="application/json">[["Term one","Its meaning"],["Term two","Its meaning"],["Term three","Its meaning"]]</script></div>
+    <div data-scrolly="sort" data-title="Sort it out"><script type="application/json">{"bins":["Do","Don't"],"items":[["A good habit",0],["A risky habit",1],["Another good habit",0],["Another risky habit",1]]}</script></div>
+  </section>
+
+  <section class="sc-section sc-wrap" data-chapter="05 · FINISH">
+    <h2 class="sc-h2">Well done</h2>
+    <div data-scrolly="certificate" data-course="{{TITLE}}"></div>
+  </section>
+</main>

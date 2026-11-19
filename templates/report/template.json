@@ -1,0 +1,1 @@
+{"name":"report","label":"Data story / report","description":"An annual report or data story: KPI tiles, charts with real/sample labels, a race, a waffle, a scrubbed counter and sticky steps over a chart.","blocks":["kpi","chart","steps","counter","color-flow","reveal","marker"],"plugins":[]}

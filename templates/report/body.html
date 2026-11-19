@@ -1,0 +1,30 @@
+<main>
+  <header class="sc-section sc-wrap" data-chapter="00 · {{SHORT}}" style="min-height:80svh;display:grid;align-content:center">
+    <p class="sc-kicker">{{KICKER}}</p>
+    <h1 class="sc-display" data-scrolly="reveal" data-effect="clip">{{TITLE}}</h1>
+    <p class="sc-lede" data-scrolly="marker">{{SUBTITLE}} <mark>One key finding goes here.</mark></p>
+  </header>
+  <section class="sc-wrap" data-chapter="01 · AT A GLANCE">
+    <div data-scrolly="kpi"><div><small>Metric one</small><b data-value="3663475" data-short></b><span>what it measures</span></div><div><small>Metric two</small><b data-value="361000" data-short></b><span>best week</span></div><div><small>Metric three</small><b data-value="190" data-suffix="+"></b><span>countries</span></div></div>
+  </section>
+  <section class="sc-section sc-wrap" data-chapter="02 · TRENDS" style="display:grid;gap:16px">
+    <div data-scrolly="chart"><script type="application/json">{"type":"line","title":"Replace: the main trend","source":"sample","note":"illustrative","labels":["Q1","Q2","Q3","Q4"],"series":[{"name":"2025","values":[220,330,300,110]},{"name":"2026","values":[260,350,320,140]}]}</script></div>
+    <div data-scrolly="chart"><script type="application/json">{"type":"bar","title":"Replace: a comparison","source":"sample","labels":["A","B","C","D","E"],"series":[{"name":"Value","values":[208,150,79,45,11]}]}</script></div>
+  </section>
+  <div data-scrolly="chart" class="sc-wrap"><script type="application/json">{"type":"race","title":"Replace: who leads over time","source":"sample","labels":["2023","2024","2025","2026"],"series":[{"name":"Alpha","values":[20,35,52,70]},{"name":"Beta","values":[40,48,55,61]},{"name":"Gamma","values":[60,58,57,55]}]}</script></div>
+  <section class="sc-section sc-wrap" data-chapter="03 · WHO">
+    <div data-scrolly="steps">
+      <div class="sc-graphic" style="padding:16px;background:var(--sc-surface)">
+        <div data-show="a" style="display:grid;place-items:center"><div data-scrolly="chart" style="width:90%"><script type="application/json">{"type":"waffle","title":"Who they are","source":"sample","labels":["Group one","Group two"],"series":[{"name":"Share","values":[80,20]}]}</script></div></div>
+        <div data-show="b" style="display:grid;place-items:center"><div data-scrolly="chart" style="width:90%"><script type="application/json">{"type":"donut","title":"What they choose","source":"sample","center":"4 options","labels":["One","Two","Three","Four"],"series":[{"name":"Share","values":[39,28,15,18]}]}</script></div></div>
+      </div>
+      <div class="sc-steps">
+        <div data-step="a"><p><b>Who.</b> Most of the audience belongs to one group.</p></div>
+        <div data-step="b"><p><b>What.</b> Their choices split four ways.</p></div>
+      </div>
+    </div>
+  </section>
+  <div data-scrolly="counter" data-to="30000000" data-suffix="+" data-pin style="background:var(--sc-accent);color:var(--sc-on-accent)"><span class="sc-kicker" style="color:inherit">{{BIG_NUMBER_LABEL}}</span></div>
+  <div data-scrolly="color-flow"><div data-bg="var(--sc-accent)" data-fg="var(--sc-on-accent)"><p class="sc-h2">Finding one</p></div><div data-bg="var(--sc-accent-2)" data-fg="var(--sc-on-accent-2)"><p class="sc-h2">Finding two</p></div><div data-bg="var(--sc-accent-3)" data-fg="#fff"><p class="sc-h2">Finding three</p></div></div>
+  <footer class="sc-section sc-wrap"><p class="sc-lede">Sources: replace with your sources. Charts marked “sample data” use illustrative numbers.</p></footer>
+</main>

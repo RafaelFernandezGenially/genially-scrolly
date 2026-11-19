@@ -1,0 +1,1 @@
+{"name":"story","label":"Narrative story","description":"A chaptered scrollytelling story: opener, sticky steps, a chapter transition, a camera map, a timeline and a closing call to action.","blocks":["reveal","words","steps","kinetic","zoom-through","camera","timeline","chart","marquee","magnetic"],"plugins":["SplitText","ScrambleTextPlugin"]}
